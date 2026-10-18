@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dugtong OJT — System Design &amp; Architecture</title>
+
+    <!-- Google Font: Poppins Only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#EEF2FF',
+                            100: '#E0E7FF',
+                            500: '#6366F1',
+                            600: '#4F46E5',
+                            700: '#4338CA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        }
+
+        .canvas-container svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: top center;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-100/80 text-slate-900 min-h-screen flex flex-col items-center pb-24 font-poppins antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Sticky Navbar (Tailwind CSS) -->
+    <header
+        class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div
+                class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
+                D
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xl font-bold tracking-tight text-slate-900 font-poppins">Dugtong OJT</span>
+                    <span
+                        class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        Vercel Native
+                    </span>
+                    <span
+                        class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        60 Skills Merged
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Navigation Tabs (Tailwind CSS) -->
+        <nav class="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+            <a href="#part1-section"
+                class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-blue-700 bg-white shadow-xs transition"
+                id="tab-p1">
+                1. 1M Users System Design
+            </a>
+            <a href="#part2-section"
+                class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 transition"
+                id="tab-p2">
+                2. Master Architecture &amp; 60 Skills
+            </a>
+            <a href="#part3-section"
+                class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 transition"
+                id="tab-p3">
+                3. PHINMA UI Features Scope
+            </a>
+        </nav>
+
+        <!-- Global Zoom Controls (Tailwind CSS) -->
+        <div class="flex items-center gap-2">
+            <button
+                class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold transition shadow-2xs text-base"
+                onclick="zoomChange(-0.15)">-</button>
+            <button
+                class="px-3.5 h-9 flex items-center justify-center rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition shadow-2xs min-w-[64px]"
+                id="zoom-indicator" onclick="resetZoom()">100%</button>
+            <button
+                class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold transition shadow-2xs text-base"
+                onclick="zoomChange(0.15)">+</button>
+            <button
+                class="px-3.5 h-9 flex items-center justify-center rounded-xl border border-slate-300 bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-bold transition shadow-2xs"
+                onclick="resetZoom()">Fit</button>
+        </div>
+    </header>
+
+    <!-- Main Content Layout (Tailwind CSS) -->
+    <main class="w-full max-w-[1700px] px-3 sm:px-6 md:px-8 py-8 flex flex-col gap-10">
+
+        <!-- PART 1: 1,000,000 Users System Design -->
+        <section id="part1-section"
+            class="scroll-mt-32 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm transition hover:shadow-md"
+            class="scroll-mt-32 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm transition hover:shadow-md">
+
+            <!-- Section Header (Tailwind CSS) -->
+            <div
+                class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 mb-6 border-b border-slate-200">
+                <div class="space-y-2">
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 tracking-wide uppercase">
+                            System Design Standard
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            1,000,000 Users Scale
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            Vercel Native
+                        </span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins">
+                        Part 1: Dugtong OJT — System Design for 1,000,000 Users
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-600 font-poppins max-w-4xl leading-relaxed">
+                        <strong class="font-bold text-slate-900">Classic system-design parts (bold)</strong> and what
+                        actually runs each one in our stack (gray). Follow the <span
+                            class="inline-flex items-center justify-center px-2 py-0.5 rounded-md bg-orange-100 text-orange-700 font-bold border border-orange-200 text-xs">orange
+                            numbers 1 to 6</span> to trace one complete request lifecycle.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <button
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition shadow-xs"
+                        onclick="downloadSvg('system-design-1m-svg', 'dugtong-system-design-1m.svg')">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download SVG
+                    </button>
+                    <button
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-sm hover:shadow"
+                        onclick="downloadPng('system-design-1m-svg', 'dugtong-system-design-1m.png', 2)">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Download PNG (2x)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vector Architecture Canvas (SVG tightly cropped starting at y=100) -->
+            <div
+                class="canvas-container w-full overflow-x-auto flex justify-center bg-white rounded-2xl p-2 border border-slate-100">
+                <svg id="system-design-1m-svg" viewBox="0 100 1600 970" width="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&amp;display=swap');
+
+                            text {
+                                font-family: 'Poppins', sans-serif;
+                            }
+                        </style>
+
+                        <filter id="shadow-card-1m" x="-5%" y="-5%" width="110%" height="110%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.06" />
+                        </filter>
+
+                        <marker id="arr-gray-1m" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748B" />
+                        </marker>
+                    </defs>
+
+                    <!-- Clean Canvas Background (tight viewBox starting at y=100 without duplicate text header) -->
+                    <rect y="100" width="1600" height="970" fill="#FFFFFF" rx="16" stroke="#E2E8F0" stroke-width="2" />
+
+                    <!-- ======================================================================= -->
+                    <!-- LEFT COLUMN: USERS & CDN                                                -->
+                    <!-- ======================================================================= -->
+
+                    <!-- CDN Node (x: 125, y: 250) -->
+                    <g transform="translate(125, 250)">
+                        <path
+                            d="M -32 0 C -44 -2 -52 8 -48 20 C -58 22 -60 36 -48 42 C -48 44 28 44 30 42 C 40 36 38 22 28 20 C 32 8 24 -2 12 0 C 6 -12 -26 -12 -32 0 Z"
+                            fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5" />
+                        <circle cx="-16" cy="22" r="3.5" fill="#0284C7" />
+                        <circle cx="0" cy="22" r="3.5" fill="#0284C7" />
+                        <circle cx="16" cy="22" r="3.5" fill="#0284C7" />
+                        <line x1="-16" y1="22" x2="-16" y2="34" stroke="#0284C7" stroke-width="2" />
+                        <line x1="0" y1="22" x2="0" y2="34" stroke="#0284C7" stroke-width="2" />
+                        <line x1="16" y1="22" x2="16" y2="34" stroke="#0284C7" stroke-width="2" />
+
+                        <text x="-6" y="66" text-anchor="middle" fill="#0F172A" font-size="17"
+                            font-weight="700">CDN</text>
+                        <text x="-6" y="86" text-anchor="middle" fill="#64748B" font-size="13" font-weight="400">Vercel
+                            Edge Network</text>
+                    </g>
+
+                    <!-- Users Node (x: 125, y: 490) -->
+                    <g transform="translate(125, 490)">
+                        <rect x="-44" y="-22" width="56" height="36" rx="4" fill="#F8FAFC" stroke="#475569"
+                            stroke-width="2.2" />
+                        <rect x="-38" y="-16" width="44" height="24" rx="2" fill="#E2E8F0" />
+                        <path d="M -52 14 L 20 14 C 23 14 24 18 20 18 L -52 18 C -56 18 -55 14 -52 14 Z"
+                            fill="#475569" />
+                        <rect x="22" y="-12" width="20" height="34" rx="4" fill="#F8FAFC" stroke="#0284C7"
+                            stroke-width="2" />
+                        <rect x="25" y="-7" width="14" height="22" rx="1.5" fill="#BAE6FD" />
+                        <circle cx="32" cy="18" r="1.5" fill="#0284C7" />
+
+                        <text x="-12" y="44" text-anchor="middle" fill="#0F172A" font-size="17"
+                            font-weight="700">Users</text>
+                        <text x="-12" y="66" text-anchor="middle" fill="#64748B" font-size="12.5"
+                            font-weight="400">Students, coordinators,</text>
+                        <text x="-12" y="84" text-anchor="middle" fill="#64748B" font-size="12.5"
+                            font-weight="400">supervisors, admins, visitors</text>
+                    </g>
+
+                    <!-- Flow Arrow 1: Users -> CDN -->
+                    <line x1="115" y1="465" x2="115" y2="345" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <circle cx="115" cy="405" r="13.5" fill="#F97316" />
+                    <text x="115" y="410" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">1</text>
+
+                    <!-- Flow CDN -> Caches -->
+                    <path d="M 135 250 L 135 185 L 690 185 L 690 235" fill="none" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <rect x="345" y="171" width="230" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0"
+                        stroke-width="1" />
+                    <text x="460" y="189" text-anchor="middle" fill="#64748B" font-size="12.5" font-style="italic"
+                        font-weight="400">
+                        public pages served from cache
+                    </text>
+
+                    <!-- Flow Arrow 2: Users -> API Gateway -->
+                    <line x1="185" y1="490" x2="310" y2="490" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <text x="245" y="473" text-anchor="middle" fill="#64748B" font-size="12"
+                        font-weight="600">HTTPS</text>
+                    <circle cx="245" cy="490" r="13.5" fill="#F97316" />
+                    <text x="245" y="495" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">2</text>
+
+                    <!-- ======================================================================= -->
+                    <!-- VERCEL BOX (x: 230, y: 135, w: 560, h: 670)                             -->
+                    <!-- ======================================================================= -->
+                    <rect x="230" y="135" width="560" height="670" rx="16" fill="#FFFFFF" stroke="#818CF8"
+                        stroke-width="2" filter="url(#shadow-card-1m)" />
+                    <text x="250" y="166" fill="#6366F1" font-size="14.5" font-weight="700" letter-spacing="0.04em">
+                        VERCEL · scales automatically, no servers to manage
+                    </text>
+
+                    <!-- Rate Limiter (x: 360, y: 260) -->
+                    <g transform="translate(360, 260)">
+                        <path d="M -24 -24 L 24 -24 L 8 0 L 8 20 L -8 24 L -8 0 Z" fill="#3B82F6" stroke="#1D4ED8"
+                            stroke-width="1.8" />
+                        <line x1="-16" y1="-32" x2="-16" y2="-26" stroke="#3B82F6" stroke-width="2" />
+                        <line x1="-8" y1="-34" x2="-8" y2="-26" stroke="#3B82F6" stroke-width="2" />
+                        <line x1="0" y1="-36" x2="0" y2="-26" stroke="#3B82F6" stroke-width="2" />
+                        <line x1="8" y1="-34" x2="8" y2="-26" stroke="#3B82F6" stroke-width="2" />
+                        <line x1="16" y1="-32" x2="16" y2="-26" stroke="#3B82F6" stroke-width="2" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="16" font-weight="700">Rate
+                            limiter</text>
+                        <text x="0" y="66" text-anchor="middle" fill="#64748B" font-size="12.5" font-weight="400">Vercel
+                            Firewall / WAF</text>
+                    </g>
+
+                    <!-- Arrow Rate Limiter -> API Gateway (Step 3) -->
+                    <line x1="360" y1="340" x2="360" y2="445" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <circle cx="360" cy="392" r="13.5" fill="#F97316" />
+                    <text x="360" y="397" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">3</text>
+
+                    <!-- API Gateway (x: 360, y: 490) -->
+                    <g transform="translate(360, 490)">
+                        <rect x="-42" y="-24" width="84" height="48" rx="8" fill="#F8FAFC" stroke="#10B981"
+                            stroke-width="2" />
+                        <circle cx="-22" cy="0" r="4.5" fill="#F59E0B" />
+                        <circle cx="-7" cy="0" r="4.5" fill="#3B82F6" />
+                        <circle cx="8" cy="0" r="4.5" fill="#10B981" />
+                        <circle cx="23" cy="0" r="4.5" fill="#EC4899" />
+                        <rect x="-28" y="-18" width="56" height="4" rx="2" fill="#E2E8F0" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="16" font-weight="700">API
+                            gateway</text>
+                        <text x="0" y="66" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Next.js
+                            routing + auth check</text>
+                    </g>
+
+                    <!-- Arrow API Gateway -> Load Balancer -->
+                    <line x1="407" y1="490" x2="480" y2="490" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Load Balancer (x: 525, y: 490) -->
+                    <g transform="translate(525, 490)">
+                        <rect x="-28" y="-28" width="56" height="56" rx="10" fill="#6366F1" />
+                        <path d="M -14 0 L 2 0 M 2 0 L 14 -12 M 2 0 L 14 12" stroke="#FFFFFF" stroke-width="2.8"
+                            stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <circle cx="14" cy="-12" r="3" fill="#FFFFFF" />
+                        <circle cx="14" cy="12" r="3" fill="#FFFFFF" />
+                        <circle cx="-14" cy="0" r="3" fill="#FFFFFF" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="16" font-weight="700">Load
+                            balancer</text>
+                        <text x="0" y="66" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Vercel
+                            request routing</text>
+                    </g>
+
+                    <!-- Arrow Load Balancer -> Application Servers (Step 4) -->
+                    <line x1="560" y1="490" x2="640" y2="490" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <circle cx="600" cy="490" r="13.5" fill="#F97316" />
+                    <text x="600" y="495" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">4</text>
+
+                    <!-- Application Servers (x: 690, y: 490) -->
+                    <g transform="translate(690, 490)">
+                        <rect x="-42" y="-28" width="84" height="56" rx="6" fill="#F8FAFC" stroke="#6366F1"
+                            stroke-width="2" />
+                        <line x1="-34" y1="-14" x2="16" y2="-14" stroke="#CBD5E1" stroke-width="3"
+                            stroke-linecap="round" />
+                        <line x1="-34" y1="0" x2="16" y2="0" stroke="#CBD5E1" stroke-width="3" stroke-linecap="round" />
+                        <line x1="-34" y1="14" x2="16" y2="14" stroke="#CBD5E1" stroke-width="3"
+                            stroke-linecap="round" />
+                        <circle cx="26" cy="-14" r="3" fill="#10B981" />
+                        <circle cx="26" cy="0" r="3" fill="#10B981" />
+                        <circle cx="26" cy="14" r="3" fill="#10B981" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="16"
+                            font-weight="700">Application servers</text>
+                        <text x="0" y="66" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Next.js
+                            serverless functions</text>
+                    </g>
+
+                    <!-- Arrow App Servers -> Caches -->
+                    <line x1="690" y1="440" x2="690" y2="345" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Caches Node (x: 690, y: 275) -->
+                    <g transform="translate(690, 275)">
+                        <path d="M -22 -14 C -22 -22 22 -22 22 -14 L 22 16 C 22 24 -22 24 -22 16 Z" fill="#EEF2FF"
+                            stroke="#6366F1" stroke-width="2" />
+                        <ellipse cx="0" cy="-14" rx="22" ry="8" fill="#E0E7FF" stroke="#6366F1" stroke-width="1.8" />
+                        <path d="M -22 1 C -22 9 22 9 22 1" fill="none" stroke="#6366F1" stroke-width="1.5" />
+                        <path d="M 2 -12 L -6 0 L 0 0 L -2 12 L 8 -2 L 1 -2 Z" fill="#F59E0B" stroke="#D97706"
+                            stroke-width="1.2" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="16"
+                            font-weight="700">Caches</text>
+                        <text x="0" y="66" text-anchor="middle" fill="#64748B" font-size="12.5" font-weight="400">ISR
+                            page cache</text>
+                    </g>
+
+                    <!-- ======================================================================= -->
+                    <!-- HOSTED SUPABASE BOX (x: 810, y: 135, w: 730, h: 670)                    -->
+                    <!-- ======================================================================= -->
+                    <rect x="810" y="135" width="730" height="670" rx="16" fill="#FFFFFF" stroke="#0284C7"
+                        stroke-width="2" filter="url(#shadow-card-1m)" />
+                    <text x="830" y="166" fill="#0284C7" font-size="14.5" font-weight="700" letter-spacing="0.04em">
+                        HOSTED SUPABASE · the part we tune to scale
+                    </text>
+
+                    <!-- Flow App Servers to Connection Pool (Step 5) -->
+                    <path d="M 735 490 L 785 490 L 785 400 L 845 400" fill="none" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <text x="805" y="385" text-anchor="middle" fill="#64748B" font-size="12.5" font-style="italic"
+                        font-weight="500">pooled</text>
+                    <circle cx="785" cy="445" r="13.5" fill="#F97316" />
+                    <text x="785" y="450" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">5</text>
+
+                    <!-- SUPABASE ROW 1: PARTITIONS & REPLICA (y: 240) -->
+                    <!-- Partition Manager (x: 900, y: 240) -->
+                    <g transform="translate(900, 240)">
+                        <rect x="-28" y="-50" width="56" height="20" rx="10" fill="#6366F1" />
+                        <text x="0" y="-36" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">Phase
+                            3</text>
+
+                        <rect x="-38" y="-22" width="76" height="44" rx="6" fill="#F0FDF4" stroke="#10B981"
+                            stroke-width="2" />
+                        <line x1="-30" y1="-10" x2="-10" y2="-10" stroke="#10B981" stroke-width="3"
+                            stroke-linecap="round" />
+                        <line x1="-30" y1="2" x2="-10" y2="2" stroke="#10B981" stroke-width="3"
+                            stroke-linecap="round" />
+                        <circle cx="20" cy="-4" r="4" fill="#10B981" />
+
+                        <text x="0" y="40" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Partition manager</text>
+                        <text x="0" y="60" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Postgres
+                            partitioning</text>
+                    </g>
+
+                    <line x1="950" y1="240" x2="1035" y2="240" stroke="#64748B" stroke-width="2"
+                        marker-start="url(#arr-gray-1m)" marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Partitions (shards) (x: 1095, y: 240) -->
+                    <g transform="translate(1095, 240)">
+                        <rect x="-28" y="-50" width="56" height="20" rx="10" fill="#6366F1" />
+                        <text x="0" y="-36" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">Phase
+                            3</text>
+
+                        <g transform="translate(-24, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#DCFCE7" stroke="#10B981"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BBF7D0" stroke="#10B981" stroke-width="1.5" />
+                        </g>
+                        <g transform="translate(-8, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#DCFCE7" stroke="#10B981"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BBF7D0" stroke="#10B981" stroke-width="1.5" />
+                        </g>
+                        <g transform="translate(8, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#DCFCE7" stroke="#10B981"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BBF7D0" stroke="#10B981" stroke-width="1.5" />
+                        </g>
+
+                        <text x="0" y="40" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Partitions (shards)</text>
+                        <text x="0" y="60" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Split by
+                            semester</text>
+                    </g>
+
+                    <line x1="1095" y1="275" x2="1095" y2="350" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Read Replica (x: 1305, y: 240) -->
+                    <g transform="translate(1305, 240)">
+                        <rect x="-28" y="-50" width="56" height="20" rx="10" fill="#6366F1" />
+                        <text x="0" y="-36" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">Phase
+                            4</text>
+
+                        <g transform="translate(-24, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#E0F2FE" stroke="#0284C7"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BAE6FD" stroke="#0284C7" stroke-width="1.5" />
+                        </g>
+                        <g transform="translate(-8, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#E0F2FE" stroke="#0284C7"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BAE6FD" stroke="#0284C7" stroke-width="1.5" />
+                        </g>
+                        <g transform="translate(8, -20)">
+                            <path d="M 0 6 C 0 0 16 0 16 6 L 16 32 C 16 38 0 38 0 32 Z" fill="#E0F2FE" stroke="#0284C7"
+                                stroke-width="1.8" />
+                            <ellipse cx="8" cy="6" rx="8" ry="4" fill="#BAE6FD" stroke="#0284C7" stroke-width="1.5" />
+                        </g>
+
+                        <text x="0" y="40" text-anchor="middle" fill="#0F172A" font-size="15.5" font-weight="700">Read
+                            replica</text>
+                        <text x="0" y="60" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">For
+                            reports only</text>
+                    </g>
+
+                    <line x1="1135" y1="370" x2="1255" y2="270" stroke="#64748B" stroke-width="2" stroke-dasharray="5 4"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- SUPABASE ROW 2: CONNECTION POOL, DATABASE, BACKUP (y: 400) -->
+                    <!-- Connection Pool (x: 900, y: 400) -->
+                    <g transform="translate(900, 400)">
+                        <rect x="-42" y="-26" width="84" height="52" rx="8" fill="#F0F9FF" stroke="#0284C7"
+                            stroke-width="2" />
+                        <path d="M -30 -12 L -6 -2 M -30 0 L -6 0 M -30 12 L -6 2" stroke="#0284C7" stroke-width="2"
+                            stroke-linecap="round" />
+                        <circle cx="14" cy="0" r="10" fill="#BAE6FD" stroke="#0284C7" stroke-width="2" />
+                        <circle cx="14" cy="0" r="4" fill="#0284C7" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Connection pool</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12"
+                            font-weight="400">PostgREST + Supavisor</text>
+                    </g>
+
+                    <!-- Arrow Connection Pool -> Database (Step 6) -->
+                    <line x1="950" y1="400" x2="1050" y2="400" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+                    <circle cx="1000" cy="400" r="13.5" fill="#F97316" />
+                    <text x="1000" y="405" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">6</text>
+
+                    <!-- Database (x: 1095, y: 400) -->
+                    <g transform="translate(1095, 400)">
+                        <path d="M -28 -18 C -28 -28 28 -28 28 -18 L 28 22 C 28 32 -28 32 -28 22 Z" fill="#0284C7" />
+                        <ellipse cx="0" cy="-18" rx="28" ry="10" fill="#38BDF8" stroke="#0369A1" stroke-width="1.5" />
+                        <path d="M -28 -4 C -28 6 28 6 28 -4" fill="none" stroke="#FFFFFF" stroke-width="2" />
+                        <path d="M -28 10 C -28 20 28 20 28 10" fill="none" stroke="#FFFFFF" stroke-width="2" />
+
+                        <text x="0" y="48" text-anchor="middle" fill="#0F172A" font-size="16"
+                            font-weight="700">Database</text>
+                        <text x="0" y="68" text-anchor="middle" fill="#64748B" font-size="12"
+                            font-weight="400">PostgreSQL + RLS</text>
+                    </g>
+
+                    <!-- Arrow Database -> Backup -->
+                    <line x1="1135" y1="400" x2="1245" y2="400" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Backup & Recovery (x: 1305, y: 400) -->
+                    <g transform="translate(1305, 400)">
+                        <rect x="-42" y="-26" width="84" height="52" rx="8" fill="#FAF5FF" stroke="#6366F1"
+                            stroke-width="2" />
+                        <line x1="-30" y1="-10" x2="-6" y2="-10" stroke="#CBD5E1" stroke-width="3"
+                            stroke-linecap="round" />
+                        <line x1="-30" y1="4" x2="-6" y2="4" stroke="#CBD5E1" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="20" cy="-3" r="10" fill="#10B981" />
+                        <path d="M 16 -3 L 19 0 L 25 -6" fill="none" stroke="#FFFFFF" stroke-width="2"
+                            stroke-linecap="round" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5" font-weight="700">Backup
+                            &amp; recovery</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Supabase
+                            managed</text>
+                    </g>
+
+                    <!-- SUPABASE ROW 3: AUTH, ID GENERATOR, PUB/SUB (y: 550) -->
+                    <path d="M 785 490 L 785 550 L 850 550" fill="none" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Auth (x: 900, y: 550) -->
+                    <g transform="translate(900, 550)">
+                        <path
+                            d="M 0 -24 C 18 -24 22 -14 22 4 C 22 18 12 28 0 34 C -12 28 -22 18 -22 4 C -22 -14 -18 -24 0 -24 Z"
+                            fill="#818CF8" />
+                        <circle cx="0" cy="0" r="5" fill="#FFFFFF" />
+                        <path d="M -2 0 L 2 0 L 3 12 L -3 12 Z" fill="#FFFFFF" />
+
+                        <text x="0" y="52" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Auth</text>
+                        <text x="0" y="72" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Supabase
+                            Auth</text>
+                    </g>
+
+                    <line x1="1095" y1="450" x2="1095" y2="510" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- ID Generator (x: 1095, y: 550) -->
+                    <g transform="translate(1095, 550)">
+                        <rect x="-38" y="-18" width="76" height="36" rx="8" fill="#0F172A" />
+                        <text x="0" y="5" text-anchor="middle" fill="#10B981" font-size="15" font-weight="700"
+                            letter-spacing="0.05em">#a1f9</text>
+                        <circle cx="-24" cy="0" r="2.5" fill="#64748B" />
+                        <circle cx="24" cy="0" r="2.5" fill="#64748B" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5" font-weight="700">ID
+                            generator</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Postgres
+                            keys</text>
+                    </g>
+
+                    <line x1="1135" y1="430" x2="1255" y2="520" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Pub/Sub (x: 1305, y: 550) -->
+                    <g transform="translate(1305, 550)">
+                        <rect x="-22" y="-48" width="44" height="20" rx="10" fill="#6366F1" />
+                        <text x="0" y="-34" text-anchor="middle" fill="#FFFFFF" font-size="11"
+                            font-weight="700">Later</text>
+
+                        <circle cx="0" cy="0" r="20" fill="#0284C7" />
+                        <path d="M 0 -14 L 0 14 M -14 0 L 14 0 M -10 -10 L 10 10 M -10 10 L 10 -10" stroke="#FFFFFF"
+                            stroke-width="2.5" stroke-linecap="round" />
+                        <circle cx="0" cy="0" r="5" fill="#FFFFFF" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Pub/Sub</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Supabase
+                            Realtime</text>
+                    </g>
+
+                    <!-- SUPABASE ROW 4: FILE STORAGE, WORKERS, TASK SCHEDULER (y: 690) -->
+                    <path d="M 785 550 L 785 690 L 850 690" fill="none" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- File Storage (x: 900, y: 690) -->
+                    <g transform="translate(900, 690)">
+                        <rect x="-34" y="-22" width="68" height="44" rx="6" fill="#FFF7ED" stroke="#F97316"
+                            stroke-width="2" />
+                        <path d="M -34 -14 L -18 -14 L -12 -6 L 14 -6 L 14 -22 L -34 -22 Z" fill="#FDBA74"
+                            stroke="#F97316" stroke-width="1.5" />
+                        <circle cx="0" cy="4" r="5" fill="#F97316" />
+                        <path d="M -1 4 L 1 4 L 1 10 L -1 10 Z" fill="#FFFFFF" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5" font-weight="700">File
+                            storage</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">Private
+                            buckets, signed URLs</text>
+                    </g>
+
+                    <line x1="1095" y1="590" x2="1095" y2="650" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Workers (x: 1095, y: 690) -->
+                    <g transform="translate(1095, 690)">
+                        <rect x="-44" y="-24" width="88" height="48" rx="8" fill="#FAF5FF" stroke="#6366F1"
+                            stroke-width="2" />
+                        <rect x="-34" y="-12" width="16" height="24" rx="2" fill="#E0E7FF" stroke="#6366F1"
+                            stroke-width="1" />
+                        <rect x="-10" y="-12" width="16" height="24" rx="2" fill="#E0E7FF" stroke="#6366F1"
+                            stroke-width="1" />
+                        <rect x="14" y="-12" width="16" height="24" rx="2" fill="#E0E7FF" stroke="#6366F1"
+                            stroke-width="1" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5"
+                            font-weight="700">Workers</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">DB
+                            triggers + RPC functions</text>
+                    </g>
+
+                    <line x1="1155" y1="690" x2="1245" y2="690" stroke="#64748B" stroke-width="2" stroke-dasharray="5 4"
+                        marker-end="url(#arr-gray-1m)" />
+
+                    <!-- Task Scheduler (x: 1305, y: 690) -->
+                    <g transform="translate(1305, 690)">
+                        <rect x="-22" y="-48" width="44" height="20" rx="10" fill="#6366F1" />
+                        <text x="0" y="-34" text-anchor="middle" fill="#FFFFFF" font-size="11"
+                            font-weight="700">Later</text>
+
+                        <rect x="-24" y="-20" width="48" height="40" rx="6" fill="#FFF7ED" stroke="#F97316"
+                            stroke-width="2" />
+                        <circle cx="0" cy="2" r="11" fill="#FFFFFF" stroke="#F97316" stroke-width="1.8" />
+                        <polyline points="0,-4 0,2 4,4" fill="none" stroke="#F97316" stroke-width="1.8"
+                            stroke-linecap="round" />
+
+                        <text x="0" y="44" text-anchor="middle" fill="#0F172A" font-size="15.5" font-weight="700">Task
+                            scheduler</text>
+                        <text x="0" y="64" text-anchor="middle" fill="#64748B" font-size="12" font-weight="400">pg_cron
+                            (proposed)</text>
+                    </g>
+
+                    <!-- DASHED RETURN FLOW: PUB/SUB TO USERS (Cleanly routes around Task scheduler and runs at y: 825) -->
+                    <path d="M 1345 550 L 1420 550 L 1420 825 L 125 825 L 125 560" fill="none" stroke="#64748B"
+                        stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arr-gray-1m)" />
+                    <rect x="520" y="812" width="480" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0"
+                        stroke-width="1" />
+                    <text x="760" y="830" text-anchor="middle" fill="#64748B" font-size="12" font-style="italic"
+                        font-weight="400">
+                        Live notifications to users (Supabase Realtime, later phase)
+                    </text>
+
+                    <!-- BOTTOM CARD: HOW ONE REQUEST TRAVELS (y: 855 to 1045) -->
+                    <rect x="60" y="855" width="1480" height="190" rx="14" fill="#F8FAFC" stroke="#E2E8F0"
+                        stroke-width="1.5" />
+
+                    <text x="85" y="888" fill="#0F172A" font-size="17" font-weight="700">
+                        How one request travels
+                    </text>
+                    <rect x="1050" y="873" width="56" height="20" rx="10" fill="#6366F1" />
+                    <text x="1078" y="887" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">Phase
+                        3</text>
+                    <text x="1116" y="888" fill="#64748B" font-size="13" font-weight="500">= added later, when load
+                        requires it</text>
+
+                    <!-- Steps 1, 2, 3 -->
+                    <g transform="translate(85, 925)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">1</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            User opens the app; public pages come from the CDN cache
+                        </text>
+                    </g>
+
+                    <g transform="translate(565, 925)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">2</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            Private requests go to the API gateway
+                        </text>
+                    </g>
+
+                    <g transform="translate(1050, 925)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">3</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            Rate limiter blocks floods and bots
+                        </text>
+                    </g>
+
+                    <!-- Steps 4, 5, 6 -->
+                    <g transform="translate(85, 975)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">4</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            Load balancer hands it to any free app server
+                        </text>
+                    </g>
+
+                    <g transform="translate(565, 975)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">5</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            App server checks login + role, then asks the database
+                        </text>
+                    </g>
+
+                    <g transform="translate(1050, 975)">
+                        <circle cx="12" cy="0" r="11" fill="#F97316" />
+                        <text x="12" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">6</text>
+                        <text x="32" y="4" fill="#334155" font-size="13" font-weight="500">
+                            Pool shares connections; Postgres + RLS returns only allowed rows
+                        </text>
+                    </g>
+
+                </svg>
+            </div>
+
+            <!-- Interactive Tailwind CSS Step-by-Step Breakdown (Steps 1 to 6) -->
+            <div class="mt-8 bg-slate-50/80 border border-slate-200 rounded-2xl p-6 shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-slate-200">
+                    <div class="flex items-center gap-2.5">
+                        <span
+                            class="w-7 h-7 rounded-lg bg-orange-500 text-white font-bold flex items-center justify-center text-xs shadow-xs">
+                            ★
+                        </span>
+                        <h3 class="text-base font-bold text-slate-900 font-poppins">How One Request Travels (Steps 1 to
+                            6)</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-xs">Phase
+                            3</span>
+                        <span class="text-xs font-semibold text-slate-500">= added later, when load requires it</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">1</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Public Cache Hit</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">User opens the app; public landing
+                                pages &amp; static marketing assets come instantly from the Vercel Edge CDN cache
+                                without hitting origin.</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">2</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Secure API Gateway
+                            </h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Private &amp; dynamic requests travel
+                                via TLS 1.3 HTTPS to the Next.js API gateway with auth session &amp; server-derived role
+                                check.</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">3</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Rate Limiting
+                                Protection</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Vercel Firewall &amp; Edge WAF rate
+                                limiters block flood bursts, DDoS attacks, and unauthorized bots (returning HTTP 429 Too
+                                Many Requests).</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">4</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Serverless Load
+                                Balancing</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Vercel Edge request routing
+                                distributes traffic seamlessly across available Next.js 15 Serverless Function compute
+                                instances.</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">5</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Application Compute
+                                &amp; Auth</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">App server validates HttpOnly session
+                                cookies, runs strict Zod validation, checks cache headers, and queries the connection
+                                pool.</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-orange-300 transition">
+                        <span
+                            class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white font-bold text-sm flex items-center justify-center shadow-xs">6</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Connection Pool &amp;
+                                RLS</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Supavisor shares pooled connections;
+                                PostgreSQL executes queries with RLS returning only allowed tenant rows strictly per
+                                role.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 2: Master Architecture & 60 Applied Engineering Skills -->
+        <section id="part2-section"
+            class="scroll-mt-32 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm transition hover:shadow-md">
+
+            <!-- Section Header (Tailwind CSS) -->
+            <div
+                class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 mb-6 border-b border-slate-200">
+                <div class="space-y-2">
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 tracking-wide uppercase">
+                            5-Tier Canonical Architecture
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            60 Vercel Skills Merged
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                            RA 10173 DPA Compliant
+                        </span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins">
+                        Part 2: Dugtong OJT — Master Architecture &amp; 60 Applied Engineering Skills
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-600 font-poppins max-w-4xl leading-relaxed">
+                        5-Tier Canonical Architecture • 7 Software Engineering Pillars with all 60 Skills •
+                        High-Concurrency Burst Shield (1,000s simultaneous clicks) • Hosted Supabase + Next.js 15 Vercel
+                        Native.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <button
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition shadow-xs"
+                        onclick="downloadSvg('system-design-sda-svg', 'dugtong-master-architecture-sda.svg')">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download SVG
+                    </button>
+                    <button
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-sm hover:shadow"
+                        onclick="downloadPng('system-design-sda-svg', 'dugtong-master-architecture-sda.png', 2)">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Download PNG (2x)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vector Master Architecture Canvas (SVG tightly cropped starting at y=100) -->
+            <div
+                class="canvas-container w-full overflow-x-auto flex justify-center bg-white rounded-2xl p-2 border border-slate-100">
+                <svg id="system-design-sda-svg" viewBox="0 100 1600 2630" width="100%"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&amp;display=swap');
+
+                            text {
+                                font-family: 'Poppins', sans-serif;
+                            }
+                        </style>
+
+                        <filter id="shadow-card-sda" x="-5%" y="-5%" width="110%" height="110%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.05" />
+                        </filter>
+
+                        <marker id="arr-blue-sda" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#0284C7" />
+                        </marker>
+                        <marker id="arr-purple-sda" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6"
+                            markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#6366F1" />
+                        </marker>
+                    </defs>
+
+                    <!-- Clean Canvas Background (tight viewBox starting at y=100 without duplicate text header) -->
+                    <rect y="100" width="1600" height="2630" fill="#FFFFFF" rx="16" stroke="#E2E8F0" stroke-width="2" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 1: FIVE CANONICAL ROLES + PUBLIC DISCOVERY (y: 125 to 445)         -->
+                    <!-- ======================================================================= -->
+                    <rect x="40" y="125" width="1520" height="320" rx="14" fill="#FFFFFF" stroke="#0284C7"
+                        stroke-width="2" filter="url(#shadow-card-sda)" />
+                    <text x="65" y="156" fill="#0284C7" font-size="15" font-weight="700" letter-spacing="0.04em">
+                        1. FIVE CANONICAL ROLES + PUBLIC DISCOVERY (STRICT WORKSPACE ISOLATION)
+                    </text>
+                    <text x="1535" y="156" text-anchor="end" fill="#64748B" font-size="13" font-weight="500">
+                        CONTEXT.md Section 12 &amp; 10.4 Semantic Tokens
+                    </text>
+
+                    <!-- Card 1: Public Visitor (x: 60, w: 283) -->
+                    <rect x="60" y="175" width="283" height="245" rx="10" fill="#F0F9FF" stroke="#38BDF8"
+                        stroke-width="1.5" />
+                    <rect x="75" y="190" width="110" height="24" rx="6" fill="#0284C7" />
+                    <text x="130" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">PUBLIC
+                        VISITOR</text>
+                    <text x="75" y="238" fill="#0F172A" font-size="16" font-weight="700">Open Marketplace</text>
+                    <text x="75" y="268" fill="#334155" font-size="13.5" font-weight="500">• Browse verified OJT slots
+                        free</text>
+                    <text x="75" y="294" fill="#334155" font-size="13.5" font-weight="500">• Filter course, hours &amp;
+                        location</text>
+                    <text x="75" y="320" fill="#334155" font-size="13.5" font-weight="500">• Inspect mandatory Task
+                        Scope</text>
+                    <rect x="75" y="375" width="253" height="28" rx="6" fill="#FFFFFF" stroke="#BAE6FD"
+                        stroke-width="1.2" />
+                    <text x="201" y="394" text-anchor="middle" fill="#0369A1" font-size="12" font-weight="700">Zero
+                        Student PII Exposed</text>
+
+                    <!-- Card 2: PHINMA UI Coordinator (x: 359, w: 283) -->
+                    <rect x="359" y="175" width="283" height="245" rx="10" fill="#EEF2FF" stroke="#818CF8"
+                        stroke-width="1.5" />
+                    <rect x="374" y="190" width="165" height="24" rx="6" fill="#4F46E5" />
+                    <text x="456" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">PHINMA
+                        UI COORDINATOR</text>
+                    <text x="374" y="238" fill="#0F172A" font-size="16" font-weight="700">School Core Workspace</text>
+                    <text x="374" y="268" fill="#334155" font-size="13.5" font-weight="500">• Upload CSV student
+                        roster</text>
+                    <text x="374" y="294" fill="#334155" font-size="13.5" font-weight="500">• Request partnerships &amp;
+                        deploy</text>
+                    <text x="374" y="320" fill="#334155" font-size="13.5" font-weight="500">• Approve student daily
+                        journals</text>
+                    <rect x="374" y="375" width="253" height="28" rx="6" fill="#FFFFFF" stroke="#C7D2FE"
+                        stroke-width="1.2" />
+                    <text x="500" y="394" text-anchor="middle" fill="#3730A3" font-size="12" font-weight="700">Generates
+                        Audit &amp; MOA</text>
+
+                    <!-- Card 3: Partner Supervisor (x: 658, w: 283) -->
+                    <rect x="658" y="175" width="283" height="245" rx="10" fill="#F0FDF4" stroke="#34D399"
+                        stroke-width="1.5" />
+                    <rect x="673" y="190" width="150" height="24" rx="6" fill="#059669" />
+                    <text x="748" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">PARTNER
+                        SUPERVISOR</text>
+                    <text x="673" y="238" fill="#0F172A" font-size="16" font-weight="700">Host Company Space</text>
+                    <text x="673" y="268" fill="#334155" font-size="13.5" font-weight="500">• Post OJT slots + Task
+                        Scope</text>
+                    <text x="673" y="294" fill="#334155" font-size="13.5" font-weight="500">• Accept/Decline school
+                        requests</text>
+                    <text x="673" y="320" fill="#334155" font-size="13.5" font-weight="500">• Record intern attendance
+                        logs</text>
+                    <rect x="673" y="375" width="253" height="28" rx="6" fill="#FFFFFF" stroke="#A7F3D0"
+                        stroke-width="1.2" />
+                    <text x="799" y="394" text-anchor="middle" fill="#065F46" font-size="12" font-weight="700">Evaluates
+                        (No Journals)</text>
+
+                    <!-- Card 4: PHINMA UI Student (x: 957, w: 283) -->
+                    <rect x="957" y="175" width="283" height="245" rx="10" fill="#F0FDFA" stroke="#2DD4BF"
+                        stroke-width="1.5" />
+                    <rect x="972" y="190" width="145" height="24" rx="6" fill="#0D9488" />
+                    <text x="1044" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">PHINMA
+                        UI STUDENT</text>
+                    <text x="972" y="238" fill="#0F172A" font-size="16" font-weight="700">Intern Protection
+                        Portal</text>
+                    <text x="972" y="268" fill="#334155" font-size="13.5" font-weight="500">• Created via verified
+                        school CSV</text>
+                    <text x="972" y="294" fill="#334155" font-size="13.5" font-weight="500">• Acknowledge Scope on 1st
+                        login</text>
+                    <text x="972" y="320" fill="#334155" font-size="13.5" font-weight="500">• Submit daily journals
+                        &amp; tasks</text>
+                    <rect x="972" y="375" width="253" height="28" rx="6" fill="#FFFFFF" stroke="#99F6E4"
+                        stroke-width="1.2" />
+                    <text x="1098" y="394" text-anchor="middle" fill="#115E59" font-size="12"
+                        font-weight="700">Read-Only Attendance Logs</text>
+
+                    <!-- Card 5: Dugtong Admin (x: 1256, w: 283) -->
+                    <rect x="1256" y="175" width="283" height="245" rx="10" fill="#FFF1F2" stroke="#FB7185"
+                        stroke-width="1.5" />
+                    <rect x="1271" y="190" width="125" height="24" rx="6" fill="#E11D48" />
+                    <text x="1333" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">DUGTONG ADMIN</text>
+                    <text x="1271" y="238" fill="#0F172A" font-size="16" font-weight="700">Trust &amp; Governance</text>
+                    <text x="1271" y="268" fill="#334155" font-size="13.5" font-weight="500">• Verify school &amp;
+                        company docs</text>
+                    <text x="1271" y="294" fill="#334155" font-size="13.5" font-weight="500">• Review scope reports
+                        &amp; issues</text>
+                    <text x="1271" y="320" fill="#334155" font-size="13.5" font-weight="500">• Oversee platform trust
+                        scores</text>
+                    <rect x="1271" y="375" width="253" height="28" rx="6" fill="#FFFFFF" stroke="#FECDD3"
+                        stroke-width="1.2" />
+                    <text x="1397" y="394" text-anchor="middle" fill="#9F1239" font-size="12" font-weight="700">Enforces
+                        Safe Placements</text>
+
+                    <!-- Flow line Tier 1 to Tier 2 -->
+                    <line x1="800" y1="445" x2="800" y2="470" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-purple-sda)" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 2: VERCEL SERVERLESS EDGE & APP ROUTER (y: 470 to 800)             -->
+                    <!-- ======================================================================= -->
+                    <rect x="40" y="470" width="1520" height="330" rx="14" fill="#FFFFFF" stroke="#6366F1"
+                        stroke-width="2" filter="url(#shadow-card-sda)" />
+                    <text x="65" y="501" fill="#6366F1" font-size="15" font-weight="700" letter-spacing="0.04em">
+                        2. VERCEL SERVERLESS EDGE &amp; NEXT.JS 15 APP ROUTER (CLEAN MVC + SERVICE-REPOSITORY)
+                    </text>
+                    <text x="1535" y="501" text-anchor="end" fill="#64748B" font-size="13" font-weight="500">
+                        Stateless Edge Compute • Vercel Native
+                    </text>
+
+                    <!-- Tier 2 - Card 1: Presentation & Edge Layer (x: 60, w: 477) -->
+                    <rect x="60" y="520" width="477" height="255" rx="10" fill="#FAF5FF" stroke="#A78BFA"
+                        stroke-width="1.5" />
+                    <text x="80" y="548" fill="#0F172A" font-size="17" font-weight="700">Presentation &amp; Edge
+                        Layer</text>
+                    <text x="80" y="570" fill="#6366F1" font-size="12.5" font-weight="600">src/app/ •
+                        src/components/ui/</text>
+                    <text x="80" y="602" fill="#334155" font-size="14" font-weight="500">• Vercel Edge WAF &amp; IP
+                        Flood Rate Limiting (429)</text>
+                    <text x="80" y="630" fill="#334155" font-size="14" font-weight="500">• Cookie-Free ISR Edge Cache
+                        for Marketplace</text>
+                    <text x="80" y="658" fill="#334155" font-size="14" font-weight="500">• Generic Props-Driven
+                        shadcn/ui Design Tokens</text>
+                    <text x="80" y="686" fill="#334155" font-size="14" font-weight="500">• Instant Button Lock
+                        (useActionState) on Clicks</text>
+                    <rect x="80" y="730" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#DDD6FE"
+                        stroke-width="1.2" />
+                    <text x="298" y="750" text-anchor="middle" fill="#6D28D9" font-size="12.5" font-weight="700">Owner:
+                        Neil Mar (Tokens, 375px–1440px)</text>
+
+                    <!-- Tier 2 - Card 2: Server Actions & Domain Logic (x: 561, w: 477) -->
+                    <rect x="561" y="520" width="477" height="255" rx="10" fill="#F0F9FF" stroke="#38BDF8"
+                        stroke-width="1.5" />
+                    <text x="581" y="548" fill="#0F172A" font-size="17" font-weight="700">Server Actions &amp; Domain
+                        Logic</text>
+                    <text x="581" y="570" fill="#0284C7" font-size="12.5" font-weight="600">src/lib/ •
+                        src/app/api/</text>
+                    <text x="581" y="602" fill="#334155" font-size="14" font-weight="500">• Trusted Auth Check:
+                        supabase.auth.getUser()</text>
+                    <text x="581" y="630" fill="#334155" font-size="14" font-weight="500">• Zod Schema &amp; CSV Roster
+                        Row-Level Validation</text>
+                    <text x="581" y="658" fill="#334155" font-size="14" font-weight="500">• Rules: Sender != Receiver
+                        Accept | Scope Shield</text>
+                    <text x="581" y="686" fill="#334155" font-size="14" font-weight="500">• Server-Side Account Creation
+                        &amp; Hour Calculations</text>
+                    <rect x="581" y="730" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#BAE6FD"
+                        stroke-width="1.2" />
+                    <text x="799" y="750" text-anchor="middle" fill="#0369A1" font-size="12.5" font-weight="700">Owners:
+                        Josiah (Marketplace) • Arwin • Khent</text>
+
+                    <!-- Tier 2 - Card 3: Direct Client Realtime Sync (x: 1062, w: 477) -->
+                    <rect x="1062" y="520" width="477" height="255" rx="10" fill="#F0FDFA" stroke="#2DD4BF"
+                        stroke-width="1.5" />
+                    <text x="1082" y="548" fill="#0F172A" font-size="17" font-weight="700">Direct Client Realtime
+                        Sync</text>
+                    <text x="1082" y="570" fill="#0D9488" font-size="12.5" font-weight="600">'use client' • Browser
+                        Client in src/lib/supabase/</text>
+                    <text x="1082" y="602" fill="#334155" font-size="14" font-weight="500">• Scoped Channels (school_id
+                        / student_id)</text>
+                    <text x="1082" y="630" fill="#334155" font-size="14" font-weight="500">• Live Attendance, Slots,
+                        Partnerships &amp; Journals</text>
+                    <text x="1082" y="658" fill="#334155" font-size="14" font-weight="500">• Clean Unmount:
+                        supabase.removeChannel(ch)</text>
+                    <text x="1082" y="686" fill="#334155" font-size="14" font-weight="500">• Zero Manual Refresh •
+                        router.refresh() on CDC</text>
+                    <rect x="1082" y="730" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#99F6E4"
+                        stroke-width="1.2" />
+                    <text x="1300" y="750" text-anchor="middle" fill="#115E59" font-size="12.5"
+                        font-weight="700">Sub-50ms Delta Broadcasts</text>
+
+                    <!-- Flow line Tier 2 to Tier 3 -->
+                    <line x1="800" y1="800" x2="800" y2="825" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-blue-sda)" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 3: SUPAVISOR POOLING & REALTIME CDC (y: 825 to 945)                -->
+                    <!-- ======================================================================= -->
+                    <g transform="translate(60, 825)">
+                        <rect x="0" y="0" width="728" height="95" rx="10" fill="#F0F9FF" stroke="#0284C7"
+                            stroke-width="1.8" />
+                        <circle cx="35" cy="47" r="18" fill="#0284C7" />
+                        <path d="M 27 47 L 43 47 M 37 41 L 43 47 L 37 53" stroke="#FFFFFF" stroke-width="2.5"
+                            stroke-linecap="round" fill="none" />
+                        <text x="70" y="40" fill="#0F172A" font-size="16" font-weight="700">HTTPS PostgREST + Supavisor
+                            Connection Pool (Port 6543)</text>
+                        <text x="70" y="65" fill="#334155" font-size="13" font-weight="500">Transaction pooling for
+                            Server Actions &amp; API Routes • Absorbs high-concurrency spikes</text>
+                    </g>
+
+                    <g transform="translate(812, 825)">
+                        <rect x="0" y="0" width="728" height="95" rx="10" fill="#F0FDF4" stroke="#10B981"
+                            stroke-width="1.8" />
+                        <circle cx="35" cy="47" r="18" fill="#10B981" />
+                        <path d="M 28 47 C 28 41 42 41 42 47 C 42 53 28 53 28 47" stroke="#FFFFFF" stroke-width="2.5"
+                            fill="none" />
+                        <text x="70" y="40" fill="#0F172A" font-size="16" font-weight="700">Supabase Realtime (CDC &amp;
+                            Broadcast Channels)</text>
+                        <text x="70" y="65" fill="#334155" font-size="13" font-weight="500">Postgres Write-Ahead Log
+                            (WAL) streaming • Bypasses database server on read updates</text>
+                    </g>
+
+                    <!-- Flow line Tier 3 to Tier 4 -->
+                    <line x1="800" y1="920" x2="800" y2="945" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-blue-sda)" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 4: HOSTED SUPABASE CORE DATABASE & STORAGE (y: 945 to 1315)        -->
+                    <!-- ======================================================================= -->
+                    <rect x="40" y="945" width="1520" height="370" rx="14" fill="#FFFFFF" stroke="#059669"
+                        stroke-width="2" filter="url(#shadow-card-sda)" />
+                    <text x="65" y="976" fill="#059669" font-size="15" font-weight="700" letter-spacing="0.04em">
+                        3. HOSTED SUPABASE CORE DATABASE &amp; STORAGE (POSTGRESQL 15+ &amp; RLS DEFENSE)
+                    </text>
+                    <text x="1535" y="976" text-anchor="end" fill="#64748B" font-size="13" font-weight="500">
+                        ACID Transactions • Zero Leaks • RA 10173 DPA Compliant
+                    </text>
+
+                    <!-- Tier 4 - Card 1: Relational Data Modeling (x: 60, w: 477) -->
+                    <rect x="60" y="995" width="477" height="295" rx="10" fill="#F0FDF4" stroke="#34D399"
+                        stroke-width="1.5" />
+                    <text x="80" y="1025" fill="#0F172A" font-size="17" font-weight="700">Relational Data Modeling &amp;
+                        Tables</text>
+                    <text x="80" y="1047" fill="#059669" font-size="12.5" font-weight="600">PostgreSQL Relational
+                        Schema</text>
+                    <text x="80" y="1079" fill="#334155" font-size="14" font-weight="500">• 10 Production Tables with
+                        strict Foreign Keys &amp; constraints</text>
+                    <text x="80" y="1107" fill="#334155" font-size="14" font-weight="500">• Composite Indexes on
+                        (school_id, status) &amp; student_id</text>
+                    <text x="80" y="1135" fill="#334155" font-size="14" font-weight="500">• Automated Migrations in
+                        supabase/sql/</text>
+                    <text x="80" y="1163" fill="#334155" font-size="14" font-weight="500">• Soft deletes &amp; audit
+                        tracking (created_at, updated_at)</text>
+                    <rect x="80" y="1235" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#A7F3D0"
+                        stroke-width="1.2" />
+                    <text x="298" y="1255" text-anchor="middle" fill="#065F46" font-size="12.5"
+                        font-weight="700">Numbered SQL Migrations (supabase/sql/)</text>
+
+                    <!-- Tier 4 - Card 2: Row-Level Security Shield (x: 561, w: 477) -->
+                    <rect x="561" y="995" width="477" height="295" rx="10" fill="#FEF2F2" stroke="#F87171"
+                        stroke-width="1.5" />
+                    <text x="581" y="1025" fill="#0F172A" font-size="17" font-weight="700">Row-Level Security (RLS)
+                        Shield</text>
+                    <text x="581" y="1047" fill="#DC2626" font-size="12.5" font-weight="600">Zero Bypass Database
+                        Security</text>
+                    <text x="581" y="1079" fill="#334155" font-size="14" font-weight="500">• RLS Enabled on EVERY table
+                        without exception</text>
+                    <text x="581" y="1107" fill="#334155" font-size="14" font-weight="500">• Deterministic auth.uid()
+                        checks cached in initPlan</text>
+                    <text x="581" y="1135" fill="#334155" font-size="14" font-weight="500">• Zero service_role key
+                        leakage anywhere in browser</text>
+                    <text x="581" y="1163" fill="#334155" font-size="14" font-weight="500">• DPA Compliance: Student PII
+                        hidden from public &amp; hosts</text>
+                    <rect x="581" y="1235" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#FECACA"
+                        stroke-width="1.2" />
+                    <text x="799" y="1255" text-anchor="middle" fill="#991B1B" font-size="12.5"
+                        font-weight="700">Security Baseline (Workshop Rule 4)</text>
+
+                    <!-- Tier 4 - Card 3: Storage, Auth & Scheduled Jobs (x: 1062, w: 477) -->
+                    <rect x="1062" y="995" width="477" height="295" rx="10" fill="#F0F9FF" stroke="#38BDF8"
+                        stroke-width="1.5" />
+                    <text x="1082" y="1025" fill="#0F172A" font-size="17" font-weight="700">Storage, Auth &amp;
+                        Scheduled Jobs</text>
+                    <text x="1082" y="1047" fill="#0284C7" font-size="12.5" font-weight="600">PostgreSQL Extensions
+                        &amp; Storage</text>
+                    <text x="1082" y="1079" fill="#334155" font-size="14" font-weight="500">• Private Buckets with
+                        time-limited signed URLs</text>
+                    <text x="1082" y="1107" fill="#334155" font-size="14" font-weight="500">• Secure Auth with session
+                        cookies &amp; RBAC</text>
+                    <text x="1082" y="1135" fill="#334155" font-size="14" font-weight="500">• pg_cron automated
+                        maintenance (nightly hours rollup)</text>
+                    <text x="1082" y="1163" fill="#334155" font-size="14" font-weight="500">• PostgreSQL RPCs for atomic
+                        multi-table transactions</text>
+                    <rect x="1082" y="1235" width="437" height="30" rx="6" fill="#FFFFFF" stroke="#BAE6FD"
+                        stroke-width="1.2" />
+                    <text x="1300" y="1255" text-anchor="middle" fill="#0369A1" font-size="12.5"
+                        font-weight="700">Atomic Transactions &amp; Zero Data Loss</text>
+
+                    <!-- Flow line Tier 4 to Tier 5 -->
+                    <line x1="800" y1="1315" x2="800" y2="1340" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-purple-sda)" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 5: THE 60 APPLIED ENGINEERING SKILLS (y: 1340 to 2260)             -->
+                    <!-- ======================================================================= -->
+                    <rect x="40" y="1340" width="1520" height="920" rx="14" fill="#FFFFFF" stroke="#D97706"
+                        stroke-width="2" filter="url(#shadow-card-sda)" />
+                    <text x="65" y="1371" fill="#D97706" font-size="15" font-weight="700" letter-spacing="0.04em">
+                        4. THE 60 APPLIED ENGINEERING SKILLS (ORGANIZED BY 7 MASTER SOFTWARE PILLARS)
+                    </text>
+                    <text x="1535" y="1371" text-anchor="end" fill="#64748B" font-size="13" font-weight="500">
+                        100% Vercel &amp; Supabase Native • Zero Foreign Tools
+                    </text>
+
+                    <!-- ROW 1: 4 Pillars (Width: 358px, Gap: 16px) -->
+                    <!-- Pillar 1: Software Architecture (x: 60, w: 358) -->
+                    <rect x="60" y="1395" width="358" height="400" rx="10" fill="#FAF5FF" stroke="#A78BFA"
+                        stroke-width="1.5" />
+                    <rect x="75" y="1410" width="190" height="24" rx="6" fill="#7C3AED" />
+                    <text x="170" y="1426" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">SOFTWARE ARCHITECTURE</text>
+                    <text x="75" y="1458" fill="#0F172A" font-size="15.5" font-weight="700">Next.js App Router &amp;
+                        Patterns</text>
+                    <text x="75" y="1488" fill="#1E293B" font-size="13.5" font-weight="600">• Clean MVC
+                        Architecture</text>
+                    <text x="75" y="1514" fill="#1E293B" font-size="13.5" font-weight="600">• Service-Repository
+                        Pattern</text>
+                    <text x="75" y="1540" fill="#1E293B" font-size="13.5" font-weight="600">• REST &amp; Server Action
+                        RPC</text>
+                    <text x="75" y="1566" fill="#1E293B" font-size="13.5" font-weight="600">• SOLID Design
+                        Principles</text>
+                    <text x="75" y="1592" fill="#1E293B" font-size="13.5" font-weight="600">• Strict Separation of
+                        Concerns</text>
+                    <text x="75" y="1618" fill="#1E293B" font-size="13.5" font-weight="600">• Multi-Tenant Workspace
+                        Design</text>
+                    <text x="75" y="1644" fill="#1E293B" font-size="13.5" font-weight="600">• Scalable Modularity</text>
+                    <rect x="75" y="1745" width="328" height="28" rx="6" fill="#FFFFFF" stroke="#DDD6FE"
+                        stroke-width="1.2" />
+                    <text x="239" y="1764" text-anchor="middle" fill="#6D28D9" font-size="12" font-weight="700">7
+                        ARCHITECTURE COMPETENCIES</text>
+
+                    <!-- Pillar 2: Backend Engineering (x: 434, w: 358) -->
+                    <rect x="434" y="1395" width="358" height="400" rx="10" fill="#FFF7ED" stroke="#FDBA74"
+                        stroke-width="1.5" />
+                    <rect x="449" y="1410" width="180" height="24" rx="6" fill="#EA580C" />
+                    <text x="539" y="1426" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">BACKEND ENGINEERING</text>
+                    <text x="449" y="1458" fill="#0F172A" font-size="15.5" font-weight="700">Server Actions &amp;
+                        Security</text>
+                    <text x="449" y="1488" fill="#1E293B" font-size="13.5" font-weight="600">• Supabase Auth &amp;
+                        Session Guard</text>
+                    <text x="449" y="1514" fill="#1E293B" font-size="13.5" font-weight="600">• Role-Based Access Control
+                        (RBAC)</text>
+                    <text x="449" y="1540" fill="#1E293B" font-size="13.5" font-weight="600">• Zod Form &amp; Payload
+                        Validation</text>
+                    <text x="449" y="1566" fill="#1E293B" font-size="13.5" font-weight="600">• Upstash / Vercel KV Rate
+                        Limiting</text>
+                    <text x="449" y="1592" fill="#1E293B" font-size="13.5" font-weight="600">• Next.js Tag Caching
+                        (revalidateTag)</text>
+                    <text x="449" y="1618" fill="#1E293B" font-size="13.5" font-weight="600">• pg_cron Scheduled
+                        Database Tasks</text>
+                    <text x="449" y="1644" fill="#1E293B" font-size="13.5" font-weight="600">• Partner API &amp; Webhook
+                        Integration</text>
+                    <text x="449" y="1670" fill="#1E293B" font-size="13.5" font-weight="600">• Supabase Storage Signed
+                        Uploads</text>
+                    <text x="449" y="1696" fill="#1E293B" font-size="13.5" font-weight="600">• Resend / Supabase Email
+                        Dispatch</text>
+                    <rect x="449" y="1745" width="328" height="28" rx="6" fill="#FFFFFF" stroke="#FED7AA"
+                        stroke-width="1.2" />
+                    <text x="613" y="1764" text-anchor="middle" fill="#C2410C" font-size="12" font-weight="700">9
+                        NEXT.JS BACKEND SKILLS</text>
+
+                    <!-- Pillar 3: Database Engineering (x: 808, w: 358) -->
+                    <rect x="808" y="1395" width="358" height="400" rx="10" fill="#F0FDF4" stroke="#86EFAC"
+                        stroke-width="1.5" />
+                    <rect x="823" y="1410" width="180" height="24" rx="6" fill="#16A34A" />
+                    <text x="913" y="1426" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">DATABASE ENGINEERING</text>
+                    <text x="823" y="1458" fill="#0F172A" font-size="15.5" font-weight="700">PostgreSQL Schema &amp;
+                        Speed</text>
+                    <text x="823" y="1488" fill="#1E293B" font-size="13.5" font-weight="600">• Relational Data Modeling
+                        (3NF)</text>
+                    <text x="823" y="1514" fill="#1E293B" font-size="13.5" font-weight="600">• Foreign Keys &amp;
+                        CASCADE Guard</text>
+                    <text x="823" y="1540" fill="#1E293B" font-size="13.5" font-weight="600">• SQL Query Optimization
+                        &amp; EXPLAIN</text>
+                    <text x="823" y="1566" fill="#1E293B" font-size="13.5" font-weight="600">• B-Tree &amp; Composite
+                        Indexing</text>
+                    <text x="823" y="1592" fill="#1E293B" font-size="13.5" font-weight="600">• Atomic PostgreSQL
+                        Transactions</text>
+                    <text x="823" y="1618" fill="#1E293B" font-size="13.5" font-weight="600">• Supabase Numbered
+                        Migrations</text>
+                    <text x="823" y="1644" fill="#1E293B" font-size="13.5" font-weight="600">• Row Lock Race-Condition
+                        Guard</text>
+                    <text x="823" y="1670" fill="#1E293B" font-size="13.5" font-weight="600">• Keyspace Keyset
+                        Pagination</text>
+                    <text x="823" y="1696" fill="#1E293B" font-size="13.5" font-weight="600">• Generated UUIDv4 Primary
+                        Keys</text>
+                    <rect x="823" y="1745" width="328" height="28" rx="6" fill="#FFFFFF" stroke="#BBF7D0"
+                        stroke-width="1.2" />
+                    <text x="987" y="1764" text-anchor="middle" fill="#15803D" font-size="12" font-weight="700">10
+                        POSTGRESQL DISCIPLINES</text>
+
+                    <!-- Pillar 4: Security & DPA Compliance (x: 1182, w: 358) -->
+                    <rect x="1182" y="1395" width="358" height="400" rx="10" fill="#FFF1F2" stroke="#FDA4AF"
+                        stroke-width="1.5" />
+                    <rect x="1197" y="1410" width="180" height="24" rx="6" fill="#E11D48" />
+                    <text x="1287" y="1426" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">SECURITY &amp; DPA SHIELD</text>
+                    <text x="1197" y="1458" fill="#0F172A" font-size="15.5" font-weight="700">OWASP Top 10 &amp; RA
+                        10173</text>
+                    <text x="1197" y="1488" fill="#1E293B" font-size="13.5" font-weight="600">• OWASP Top 10 Full
+                        Hardening</text>
+                    <text x="1197" y="1514" fill="#1E293B" font-size="13.5" font-weight="600">• IDOR / BOLA Prevention
+                        (RLS)</text>
+                    <text x="1197" y="1540" fill="#1E293B" font-size="13.5" font-weight="600">• Next.js SameSite CSRF
+                        Shield</text>
+                    <text x="1197" y="1566" fill="#1E293B" font-size="13.5" font-weight="600">• React 19 JSX Native XSS
+                        Defense</text>
+                    <text x="1197" y="1592" fill="#1E293B" font-size="13.5" font-weight="600">• Parameterized PostgREST
+                        Queries</text>
+                    <text x="1197" y="1618" fill="#1E293B" font-size="13.5" font-weight="600">• TypeScript Strict Type
+                        Safety</text>
+                    <text x="1197" y="1644" fill="#1E293B" font-size="13.5" font-weight="600">• HttpOnly Secure Session
+                        Cookies</text>
+                    <text x="1197" y="1670" fill="#1E293B" font-size="13.5" font-weight="600">• Zod Strict Schema
+                        Sanitization</text>
+                    <text x="1197" y="1696" fill="#1E293B" font-size="13.5" font-weight="600">• Philippine DPA RA 10173
+                        Privacy</text>
+                    <rect x="1197" y="1745" width="328" height="28" rx="6" fill="#FFFFFF" stroke="#FECDD3"
+                        stroke-width="1.2" />
+                    <text x="1361" y="1764" text-anchor="middle" fill="#9F1239" font-size="12" font-weight="700">9
+                        SECURITY &amp; DPA PROTOCOLS</text>
+
+                    <!-- ROW 2: 3 Pillars (Width: 477px, Gap: 24px) -->
+                    <!-- Pillar 5: DevOps & Cloud Delivery (x: 60, w: 477) -->
+                    <rect x="60" y="1815" width="477" height="425" rx="10" fill="#EEF2FF" stroke="#A5B4FC"
+                        stroke-width="1.5" />
+                    <rect x="75" y="1830" width="180" height="24" rx="6" fill="#4F46E5" />
+                    <text x="165" y="1846" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">VERCEL
+                        DEVOPS &amp; CLOUD</text>
+                    <text x="75" y="1878" fill="#0F172A" font-size="16.5" font-weight="700">Serverless Delivery &amp;
+                        Global Edge Network</text>
+                    <text x="75" y="1910" fill="#1E293B" font-size="13.5" font-weight="600">• CI/CD Automated Pipelines
+                        (GitHub to Vercel)</text>
+                    <text x="75" y="1938" fill="#1E293B" font-size="13.5" font-weight="600">• GitHub Actions Automated
+                        Test &amp; Lint Workflows</text>
+                    <text x="75" y="1966" fill="#1E293B" font-size="13.5" font-weight="600">• Automated Vercel Preview
+                        Deployments per PR</text>
+                    <text x="75" y="1994" fill="#1E293B" font-size="13.5" font-weight="600">• Instant Production
+                        Deployments on main Branch Push</text>
+                    <text x="75" y="2022" fill="#1E293B" font-size="13.5" font-weight="600">• Vercel Environment
+                        Variables &amp; Vault Secret Hygiene</text>
+                    <text x="75" y="2050" fill="#1E293B" font-size="13.5" font-weight="600">• Vercel Edge Network &amp;
+                        Global CDN Delivery</text>
+                    <text x="75" y="2078" fill="#1E293B" font-size="13.5" font-weight="600">• Vercel Edge WAF &amp; IP
+                        Flood 429 Rate Limiting</text>
+                    <text x="75" y="2106" fill="#1E293B" font-size="13.5" font-weight="600">• Custom Domain Routing
+                        &amp; Managed DNS Records</text>
+                    <text x="75" y="2134" fill="#1E293B" font-size="13.5" font-weight="600">• Automated Global SSL/HTTPS
+                        Certificate Renewal</text>
+                    <text x="75" y="2162" fill="#1E293B" font-size="13.5" font-weight="600">• Vercel Runtime Logs &amp;
+                        Realtime Edge Observability</text>
+                    <rect x="75" y="2195" width="447" height="30" rx="6" fill="#FFFFFF" stroke="#C7D2FE"
+                        stroke-width="1.2" />
+                    <text x="298" y="2215" text-anchor="middle" fill="#3730A3" font-size="12.5" font-weight="700">10
+                        VERCEL DEVOPS &amp; CLOUD PRACTICES</text>
+
+                    <!-- Pillar 6: Performance & Scalability (x: 561, w: 477) -->
+                    <rect x="561" y="1815" width="477" height="425" rx="10" fill="#F0FDFA" stroke="#5EEAD4"
+                        stroke-width="1.5" />
+                    <rect x="576" y="1830" width="180" height="24" rx="6" fill="#0D9488" />
+                    <text x="666" y="1846" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">PERFORMANCE &amp; SCALING</text>
+                    <text x="576" y="1878" fill="#0F172A" font-size="16.5" font-weight="700">1M-User Architecture &amp;
+                        Sub-50ms Response</text>
+                    <text x="576" y="1910" fill="#1E293B" font-size="13.5" font-weight="600">• SQL Query Optimization
+                        &amp; EXPLAIN ANALYZE</text>
+                    <text x="576" y="1938" fill="#1E293B" font-size="13.5" font-weight="600">• N+1 Prevention: select(*,
+                        companies(*))</text>
+                    <text x="576" y="1966" fill="#1E293B" font-size="13.5" font-weight="600">• initPlan RLS Caching:
+                        (SELECT auth.uid())</text>
+                    <text x="576" y="1994" fill="#1E293B" font-size="13.5" font-weight="600">• Next.js ISR &amp; Edge
+                        Tag Caching (revalidateTag)</text>
+                    <text x="576" y="2022" fill="#1E293B" font-size="13.5" font-weight="600">• Supavisor Managed
+                        Connection Pooler (Port 6543)</text>
+                    <text x="576" y="2050" fill="#1E293B" font-size="13.5" font-weight="600">• Bundle Optimization &amp;
+                        Production Tree Shaking</text>
+                    <text x="576" y="2078" fill="#1E293B" font-size="13.5" font-weight="600">• React Suspense &amp;
+                        Skeleton Loading States</text>
+                    <text x="576" y="2106" fill="#1E293B" font-size="13.5" font-weight="600">• Horizontal Scalability
+                        across Vercel Edge Regions</text>
+                    <rect x="576" y="2195" width="447" height="30" rx="6" fill="#FFFFFF" stroke="#99F6E4"
+                        stroke-width="1.2" />
+                    <text x="799" y="2215" text-anchor="middle" fill="#115E59" font-size="12.5" font-weight="700">8
+                        VERCEL SCALABILITY VECTORS</text>
+
+                    <!-- Pillar 7: Testing & Code Quality (x: 1062, w: 477) -->
+                    <rect x="1062" y="1815" width="477" height="425" rx="10" fill="#F5F3FF" stroke="#C4B5FD"
+                        stroke-width="1.5" />
+                    <rect x="1077" y="1830" width="180" height="24" rx="6" fill="#7C3AED" />
+                    <text x="1167" y="1846" text-anchor="middle" fill="#FFFFFF" font-size="11.5"
+                        font-weight="700">TESTING &amp; CODE QUALITY</text>
+                    <text x="1077" y="1878" fill="#0F172A" font-size="16.5" font-weight="700">TypeScript Verification
+                        &amp; Workshop Rules</text>
+                    <text x="1077" y="1910" fill="#1E293B" font-size="13.5" font-weight="600">• Unit Testing for Pure
+                        Utilities &amp; Token Math</text>
+                    <text x="1077" y="1938" fill="#1E293B" font-size="13.5" font-weight="600">• Integration Testing for
+                        Server Actions &amp; RPCs</text>
+                    <text x="1077" y="1966" fill="#1E293B" font-size="13.5" font-weight="600">• API Contract &amp; Route
+                        Handler Validation</text>
+                    <text x="1077" y="1994" fill="#1E293B" font-size="13.5" font-weight="600">• Five Roles Access
+                        Verification Matrix</text>
+                    <text x="1077" y="2022" fill="#1E293B" font-size="13.5" font-weight="600">• Git Branching: main /
+                        dev / neil Discipline</text>
+                    <text x="1077" y="2050" fill="#1E293B" font-size="13.5" font-weight="600">• Pull Request Peer Code
+                        Review Workflow</text>
+                    <text x="1077" y="2078" fill="#1E293B" font-size="13.5" font-weight="600">• Pre-Flight Checklist
+                        &amp; Build Verification Gates</text>
+                    <rect x="1077" y="2195" width="447" height="30" rx="6" fill="#FFFFFF" stroke="#DDD6FE"
+                        stroke-width="1.2" />
+                    <text x="1300" y="2215" text-anchor="middle" fill="#5B21B6" font-size="12.5" font-weight="700">7
+                        VERIFICATION &amp; QUALITY STANDARDS</text>
+
+                    <!-- Flow line Tier 5 to Tier 6 -->
+                    <line x1="800" y1="2260" x2="800" y2="2285" stroke="#64748B" stroke-width="2"
+                        marker-end="url(#arr-purple-sda)" />
+
+                    <!-- ======================================================================= -->
+                    <!-- TIER 6: HIGH-CONCURRENCY BURST SHIELD (y: 2285 to 2605)                 -->
+                    <!-- ======================================================================= -->
+                    <rect x="40" y="2285" width="1520" height="320" rx="14" fill="#FFFFFF" stroke="#7C3AED"
+                        stroke-width="2" filter="url(#shadow-card-sda)" />
+                    <text x="65" y="2316" fill="#7C3AED" font-size="15" font-weight="700" letter-spacing="0.04em">
+                        5. HIGH-CONCURRENCY BURST SHIELD (THOUSANDS OF SIMULTANEOUS CLICKS GUARANTEE)
+                    </text>
+                    <text x="1535" y="2316" text-anchor="end" fill="#64748B" font-size="13" font-weight="500">
+                        Zero Crashes • Zero Race Conditions • Sub-50ms UI Response
+                    </text>
+
+                    <!-- Step 1 (x: 60, w: 235) -->
+                    <rect x="60" y="2335" width="235" height="245" rx="8" fill="#FAF5FF" stroke="#A78BFA"
+                        stroke-width="1.5" />
+                    <circle cx="85" cy="2360" r="13" fill="#7C3AED" />
+                    <text x="85" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700">1</text>
+                    <text x="108" y="2365" fill="#7C3AED" font-size="13.5" font-weight="700">Client Lock</text>
+                    <text x="80" y="2395" fill="#0F172A" font-size="15" font-weight="700">Button Disables</text>
+                    <text x="80" y="2425" fill="#334155" font-size="13" font-weight="500">• useActionState hooks</text>
+                    <text x="80" y="2449" fill="#334155" font-size="13" font-weight="500">• Immediate UI lock</text>
+                    <text x="80" y="2473" fill="#334155" font-size="13" font-weight="500">• Zero double clicks</text>
+                    <text x="80" y="2497" fill="#334155" font-size="13" font-weight="500">• Skeleton loader</text>
+                    <rect x="75" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#DDD6FE"
+                        stroke-width="1.2" />
+                    <text x="177" y="2552" text-anchor="middle" fill="#6D28D9" font-size="11.5" font-weight="700">Client
+                        Instant Shield</text>
+
+                    <!-- Step 2 (x: 309, w: 235) -->
+                    <rect x="309" y="2335" width="235" height="245" rx="8" fill="#F0F9FF" stroke="#38BDF8"
+                        stroke-width="1.5" />
+                    <circle cx="334" cy="2360" r="13" fill="#0284C7" />
+                    <text x="334" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700">2</text>
+                    <text x="357" y="2365" fill="#0284C7" font-size="13.5" font-weight="700">Edge Guard</text>
+                    <text x="329" y="2395" fill="#0F172A" font-size="15" font-weight="700">Vercel WAF &amp; Rate</text>
+                    <text x="329" y="2425" fill="#334155" font-size="13" font-weight="500">• IP flood mitigation</text>
+                    <text x="329" y="2449" fill="#334155" font-size="13" font-weight="500">• Upstash token bucket</text>
+                    <text x="329" y="2473" fill="#334155" font-size="13" font-weight="500">• Returns HTTP 429</text>
+                    <text x="329" y="2497" fill="#334155" font-size="13" font-weight="500">• Absorbs bot spikes</text>
+                    <rect x="324" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#BAE6FD"
+                        stroke-width="1.2" />
+                    <text x="426" y="2552" text-anchor="middle" fill="#0369A1" font-size="11.5" font-weight="700">Edge
+                        Defense Filter</text>
+
+                    <!-- Step 3 (x: 558, w: 235) -->
+                    <rect x="558" y="2335" width="235" height="245" rx="8" fill="#EEF2FF" stroke="#818CF8"
+                        stroke-width="1.5" />
+                    <circle cx="583" cy="2360" r="13" fill="#4F46E5" />
+                    <text x="583" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700">3</text>
+                    <text x="606" y="2365" fill="#4F46E5" font-size="13.5" font-weight="700">Server Action</text>
+                    <text x="578" y="2395" fill="#0F172A" font-size="15" font-weight="700">Zod Validation</text>
+                    <text x="578" y="2425" fill="#334155" font-size="13" font-weight="500">• Server-side auth
+                        check</text>
+                    <text x="578" y="2449" fill="#334155" font-size="13" font-weight="500">• Strict Zod schema</text>
+                    <text x="578" y="2473" fill="#334155" font-size="13" font-weight="500">• Idempotency tokens</text>
+                    <text x="578" y="2497" fill="#334155" font-size="13" font-weight="500">• Drops bad payloads</text>
+                    <rect x="573" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#C7D2FE"
+                        stroke-width="1.2" />
+                    <text x="675" y="2552" text-anchor="middle" fill="#3730A3" font-size="11.5"
+                        font-weight="700">Compute Shield</text>
+
+                    <!-- Step 4 (x: 807, w: 235) -->
+                    <rect x="807" y="2335" width="235" height="245" rx="8" fill="#F0FDFA" stroke="#2DD4BF"
+                        stroke-width="1.5" />
+                    <circle cx="832" cy="2360" r="13" fill="#0D9488" />
+                    <text x="832" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700">4</text>
+                    <text x="855" y="2365" fill="#0D9488" font-size="13.5" font-weight="700">Connection Pool</text>
+                    <text x="827" y="2395" fill="#0F172A" font-size="15" font-weight="700">Supavisor Queue</text>
+                    <text x="827" y="2425" fill="#334155" font-size="13" font-weight="500">• Supavisor Port 6543</text>
+                    <text x="827" y="2449" fill="#334155" font-size="13" font-weight="500">• Transaction pooling</text>
+                    <text x="827" y="2473" fill="#334155" font-size="13" font-weight="500">• Zero connection
+                        drops</text>
+                    <text x="827" y="2497" fill="#334155" font-size="13" font-weight="500">• Thousands handled</text>
+                    <rect x="822" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#99F6E4"
+                        stroke-width="1.2" />
+                    <text x="924" y="2552" text-anchor="middle" fill="#115E59" font-size="11.5"
+                        font-weight="700">PostgREST Traffic Safe</text>
+
+                    <!-- Step 5 (x: 1056, w: 235) -->
+                    <rect x="1056" y="2335" width="235" height="245" rx="8" fill="#F0FDF4" stroke="#34D399"
+                        stroke-width="1.5" />
+                    <circle cx="1081" cy="2360" r="13" fill="#059669" />
+                    <text x="1081" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12"
+                        font-weight="700">5</text>
+                    <text x="1104" y="2365" fill="#059669" font-size="13.5" font-weight="700">Database Core</text>
+                    <text x="1076" y="2395" fill="#0F172A" font-size="15" font-weight="700">Atomic Postgres</text>
+                    <text x="1076" y="2425" fill="#334155" font-size="13" font-weight="500">• SELECT FOR UPDATE</text>
+                    <text x="1076" y="2449" fill="#334155" font-size="13" font-weight="500">• Atomic slot
+                        increments</text>
+                    <text x="1076" y="2473" fill="#334155" font-size="13" font-weight="500">• Zero race
+                        conditions</text>
+                    <text x="1076" y="2497" fill="#334155" font-size="13" font-weight="500">• ACID safe
+                        guarantees</text>
+                    <rect x="1071" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#A7F3D0"
+                        stroke-width="1.2" />
+                    <text x="1173" y="2552" text-anchor="middle" fill="#065F46" font-size="11.5" font-weight="700">ACID
+                        Integrity Lock</text>
+
+                    <!-- Step 6 (x: 1305, w: 235) -->
+                    <rect x="1305" y="2335" width="235" height="245" rx="8" fill="#FAF5FF" stroke="#C084FC"
+                        stroke-width="1.5" />
+                    <circle cx="1330" cy="2360" r="13" fill="#9333EA" />
+                    <text x="1330" y="2365" text-anchor="middle" fill="#FFFFFF" font-size="12"
+                        font-weight="700">6</text>
+                    <text x="1353" y="2365" fill="#9333EA" font-size="13.5" font-weight="700">Realtime Push</text>
+                    <text x="1325" y="2395" fill="#0F172A" font-size="15" font-weight="700">Broadcast Delta</text>
+                    <text x="1325" y="2425" fill="#334155" font-size="13" font-weight="500">• CDC event emitted</text>
+                    <text x="1325" y="2449" fill="#334155" font-size="13" font-weight="500">• Supabase channel push
+                        sub-50ms</text>
+                    <text x="1325" y="2473" fill="#334155" font-size="13" font-weight="500">• Delta payload
+                        update</text>
+                    <text x="1325" y="2497" fill="#334155" font-size="13" font-weight="500">• Zero full
+                        re-queries</text>
+                    <rect x="1320" y="2535" width="205" height="26" rx="5" fill="#FFFFFF" stroke="#E9D5FF"
+                        stroke-width="1.2" />
+                    <text x="1422" y="2552" text-anchor="middle" fill="#7E22CE" font-size="11.5"
+                        font-weight="700">Realtime Delta Sync</text>
+
+                    <!-- FOOTER BAR (y: 2630 to 2690) -->
+                    <rect x="40" y="2630" width="1520" height="60" rx="12" fill="#F8FAFC" stroke="#E2E8F0"
+                        stroke-width="1.5" />
+                    <text x="800" y="2667" text-anchor="middle" fill="#475569" font-size="14" font-weight="700"
+                        letter-spacing="0.06em">
+                        DUGTONG OJT MASTER ARCHITECTURE • NEXT.JS 15 + REACT 19 + HOSTED SUPABASE • ZERO FOREIGN TOOLING
+                        • 1M USER READY
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Interactive Tailwind CSS Matrix for the 7 Software Pillars (All 60 Skills) -->
+            <div class="mt-8 bg-slate-50/80 border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
+                    <div>
+                        <div class="flex items-center gap-2.5">
+                            <span
+                                class="w-7 h-7 rounded-lg bg-blue-600 text-white font-bold flex items-center justify-center text-xs shadow-xs">
+                                60
+                            </span>
+                            <h3 class="text-xl font-bold text-slate-900 font-poppins">60 Applied Software Engineering
+                                Skills Matrix</h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Mapped to 7 Core Engineering
+                            Pillars • 100% Vercel &amp; Hosted Supabase Native</p>
+                    </div>
+                    <span
+                        class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        All 60 Skills Verified
+                    </span>
+                </div>
+
+                <!-- 7 Pillars Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Pillar 1 -->
+                    <div
+                        class="bg-white rounded-2xl border border-indigo-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-800">
+                                Pillar 1
+                            </span>
+                            <span class="text-xs font-bold text-indigo-600">12 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">System Design &amp; Scalability</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>1M-User Capacity Planning</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Horizontal Serverless
+                                Autoscaling</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Stateless Next.js Compute</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Distributed Multi-Region Edge
+                                Caching</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Incremental Static
+                                Regeneration (ISR)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Dynamic Edge
+                                Stale-While-Revalidate</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Read/Write Query Separation
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Supavisor Connection Pooling
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Non-Blocking Async DB Triggers
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Graceful Degradation Fallbacks
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Circuit Breakers on
+                                Storage/RPC</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Multi-Tenant Partition
+                                Sharding</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="bg-white rounded-2xl border border-sky-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-sky-100 text-sky-800">
+                                Pillar 2
+                            </span>
+                            <span class="text-xs font-bold text-sky-600">10 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Frontend &amp; Next.js 15</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Next.js 15 App Router
+                                Architecture</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>React 19 Server Components (RSC)
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Server Actions with
+                                useActionState</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Optimistic UI State with
+                                useOptimistic</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Zero-Bundle-Size Server Data
+                                Fetching</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Streaming SSR &amp; Suspense
+                                Boundaries</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>shadcn/ui Accessible Primitives
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Tailwind CSS 4 Design Tokens</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Next/Image AVIF/WebP Compression
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Core Web Vitals Optimization
+                                (INP/LCP)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div
+                        class="bg-white rounded-2xl border border-emerald-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                                Pillar 3
+                            </span>
+                            <span class="text-xs font-bold text-emerald-600">10 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Database &amp; PostgreSQL</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>B-Tree Composite Indexing
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>PostgreSQL GIN Full-Text
+                                Search</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>BRIN Indexing for Audit
+                                Timestamps</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Atomic Transactions
+                                (BEGIN/COMMIT)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Row-Level Locking (FOR
+                                UPDATE)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Atomic PostgREST RPC
+                                Operations</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Expand -> Migrate -> Contract
+                                Workflow</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>EXPLAIN ANALYZE Query
+                                Profiling</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Multi-Column Foreign Key
+                                Indexes</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Generated UUIDv4 Primary Keys
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="bg-white rounded-2xl border border-rose-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800">
+                                Pillar 4
+                            </span>
+                            <span class="text-xs font-bold text-rose-600">9 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Security &amp; RA 10173 DPA</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>OWASP Top 10 Full Hardening</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>IDOR / BOLA Row Level Security
+                                (RLS)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Next.js SameSite CSRF Shield
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>React 19 JSX Native XSS Defense
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Parameterized PostgREST Queries
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>TypeScript Strict Type Safety
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>HttpOnly Secure Session Cookies
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Zod Strict Schema Sanitization
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Philippine DPA RA 10173
+                                Compliance</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 5 -->
+                    <div class="bg-white rounded-2xl border border-amber-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
+                                Pillar 5
+                            </span>
+                            <span class="text-xs font-bold text-amber-600">7 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">High-Concurrency Burst Shield</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Frontend Button Debounce &amp;
+                                Disable</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Client Idempotency Key UUID
+                                Generation</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Edge Middleware IP Rate
+                                Limiting (429)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Database Unique Idempotency
+                                Constraint</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Selective Row Locking (FOR
+                                UPDATE)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Supabase Realtime CDC /
+                                Broadcast</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Zero-Downtime Peak Traffic
+                                Handling</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 6 -->
+                    <div
+                        class="bg-white rounded-2xl border border-purple-200 p-5 shadow-2xs hover:shadow-xs transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800">
+                                Pillar 6
+                            </span>
+                            <span class="text-xs font-bold text-purple-600">6 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Vercel DevOps &amp; Cloud</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>CI/CD Automated GitHub
+                                Pipelines</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Automated Preview Deployments
+                                per PR</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Production Instant Deploy on
+                                Push</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Environment Secret Vault
+                                Hygiene</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Edge Network &amp; Global CDN
+                                Delivery</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Automated SSL/HTTPS
+                                Certificate Renewal</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 7 -->
+                    <div
+                        class="bg-white rounded-2xl border border-slate-300 p-5 shadow-2xs hover:shadow-xs transition md:col-span-2 lg:col-span-1">
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-slate-100 text-slate-800">
+                                Pillar 7
+                            </span>
+                            <span class="text-xs font-bold text-slate-600">6 Skills</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Software Architecture &amp; Clean Code</h4>
+                        <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>SOLID Design Principles</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Clean Architecture Module
+                                Boundaries</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Domain-Driven Separation of
+                                Concerns</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Self-Documenting Code Standards
+                            </li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Preserve Existing Codebase
+                                Discipline</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Zero Technical Debt Migration
+                                Policy</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PART 3: PHINMA UI Complete Feature Scope & Architectural Mapping -->
+        <section id="part3-section"
+            class="scroll-mt-32 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm transition hover:shadow-md">
+
+            <!-- Section Header -->
+            <div
+                class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 mb-6 border-b border-slate-200">
+                <div class="space-y-2">
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 tracking-wide uppercase">
+                            PHINMA University of Iloilo
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            Hackathon &rarr; School Adaptation
+                        </span>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Supabase Realtime Only
+                        </span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins">
+                        Part 3: Dugtong OJT &mdash; PHINMA UI Complete Feature Scope
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-600 font-poppins max-w-4xl leading-relaxed">
+                        Adapted directly from the Hackathon specification for dedicated single-school institutional use
+                        at <strong class="font-bold text-slate-900">PHINMA University of Iloilo</strong>. Excludes
+                        public multi-tenant school onboarding and open-market student self-applications in favor of
+                        verified institutional coordinator deployments.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <span
+                        class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        6 Roles Fully Mapped
+                    </span>
+                </div>
+            </div>
+
+            <!-- Realtime Architecture Callout -->
+            <div
+                class="mb-8 p-5 bg-emerald-50/70 border border-emerald-200 rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div
+                    class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-lg shadow-xs">
+                    &bull;
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-sm font-bold text-emerald-950 font-poppins uppercase tracking-wide">Real-Time
+                        Engine: 100% Hosted Supabase Realtime (No Custom WebSockets)</h4>
+                    <p class="text-xs sm:text-sm text-emerald-800 leading-relaxed font-medium">
+                        Next.js on Vercel runs completely serverless and stateless. All live updates (instant hour
+                        approval notifications, live attendance check-ins, and journal updates) connect directly from
+                        client browsers to <strong class="font-bold text-emerald-950">Hosted Supabase Realtime
+                            Channels</strong> (<code
+                            class="bg-emerald-100/80 px-1.5 py-0.5 rounded text-emerald-900 text-xs font-mono">postgres_changes</code>
+                        and <code
+                            class="bg-emerald-100/80 px-1.5 py-0.5 rounded text-emerald-900 text-xs font-mono">broadcast</code>).
+                        Zero custom Node.js WebSocket servers or daemons exist on Vercel.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 6 Roles Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Role 1: Public Visitor / Anyone -->
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-slate-100 text-slate-800">
+                                Anyone (Public)
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
+                                Adapted
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Public Discovery &amp; Compliance</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">No account needed for general visitors</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Branded Landing Page:</strong> Highlights PHINMA UI OJT program,
+                                    requirements, and accredited industry partners.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Legal Compliance:</strong> Dedicated Privacy Notice (<code
+                                        class="font-mono text-[11px]">/privacy</code>) under RA 10173 DPA and Terms of
+                                    Use (<code class="font-mono text-[11px]">/terms</code>).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Openings Board:</strong> Search &amp; filter verified OJT slots by course,
+                                    hours, schedule, and city.</span>
+                            </li>
+                            <li
+                                class="flex items-start gap-2 text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200">
+                                <span class="font-bold">!</span>
+                                <span><strong>School Adaptation:</strong> Public sign-up is reserved for prospective
+                                    employer partners. <em>No open student self-registration</em> (students are imported
+                                    via official roster).</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code
+                            class="font-mono text-slate-700">/marketplace &bull; /privacy &bull; /terms</code>
+                    </div>
+                </div>
+
+                <!-- Role 2: Coordinator (PHINMA UI Workspace) -->
+                <div
+                    class="bg-white rounded-2xl border border-indigo-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-800">
+                                PHINMA UI Coordinator
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800">
+                                Core School Hub
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">School Core Workspace</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">Manages students, MOAs, placements &amp;
+                            hours</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Roster Upload:</strong> Server-validated CSV/Excel import. All-or-nothing
+                                    rollback on invalid rows. Auto-generates student accounts.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Student Progress Dashboard:</strong> Tracks approved vs required hours
+                                    (e.g. 486/600 hrs), pending queue, and MOA warnings.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>MOA Document Hygiene:</strong> Records signed &amp; expiration dates with
+                                    60/30-day alerts; stores signed MOA PDFs.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Direct Student Placement:</strong> Places students at accepted partner
+                                    companies under active MOAs.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Approval &amp; Certificate:</strong> Approve/reject time logs with audit
+                                    history; review daily journals; issue completion PDF certificate.</span>
+                            </li>
+                            <li
+                                class="flex items-start gap-2 text-rose-800 bg-rose-50/80 p-2 rounded-lg border border-rose-200">
+                                <span class="font-bold">&cross;</span>
+                                <span><strong>Removed:</strong> "Set up school and wait for Dugtong verification"
+                                    (Single school deployment; PHINMA UI is pre-configured).</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code class="font-mono text-slate-700">/coordinator/*</code>
+                    </div>
+                </div>
+
+                <!-- Role 3: Student (Intern Protection Portal) -->
+                <div
+                    class="bg-white rounded-2xl border border-sky-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-sky-100 text-sky-800">
+                                PHINMA UI Student
+                            </span>
+                            <span
+                                class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                Intern Protection
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Student OJT Portal</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">Time tracking, journals &amp; safety
+                            reporting</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Scope Acknowledgment:</strong> Mandatory first-login acknowledgment of
+                                    assigned training plan and task boundaries.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Daily Time Log:</strong> Log daily hours (today or up to 30 days back,
+                                    1/day). Track Pending, Approved, or Rejected status. Fix &amp; resubmit.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Daily Journal:</strong> Write narrative reflection for logged days; view
+                                    coordinator evaluation feedback.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Intern Protection Shield:</strong> Report out-of-scope tasks
+                                    (errands/manual labor), unsafe environments, or unpaid overtime.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Completion Certificate:</strong> Download printable PDF completion
+                                    certificate once hours reach 100%.</span>
+                            </li>
+                            <li
+                                class="flex items-start gap-2 text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200">
+                                <span class="font-bold">!</span>
+                                <span><strong>Adapted:</strong> Students view assigned placement &amp; schedule directly
+                                    instead of open-board free-agent job applying.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code class="font-mono text-slate-700">/student/*</code>
+                    </div>
+                </div>
+
+                <!-- Role 4: Supervisor (Company Side) -->
+                <div
+                    class="bg-white rounded-2xl border border-emerald-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                                Partner Supervisor
+                            </span>
+                            <span
+                                class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                Host Company
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Host Company Workspace</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">Oversees assigned interns &amp; submits
+                            evaluations</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Tenant Isolation:</strong> Strictly accesses only interns placed at their
+                                    specific company via Postgres RLS.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Daily Hours Verification:</strong> Approves or rejects pending hours.
+                                    (Coordinator retains final institutional override).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Intern Evaluation Rubric:</strong> Fills PHINMA UI-standard performance
+                                    evaluation rubric (midterm &amp; final grades).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Journal Review:</strong> Read-only access to intern daily journals to
+                                    confirm alignment with assigned work.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Attendance &amp; Progress:</strong> Real-time today's attendance status
+                                    and approved vs required hours bar.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Report Appeals:</strong> Right to appeal student misuse reports upheld by
+                                    the school coordinator.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code class="font-mono text-slate-700">/supervisor/*</code>
+                    </div>
+                </div>
+
+                <!-- Role 5: Company (Host Training Establishment) -->
+                <div
+                    class="bg-white rounded-2xl border border-purple-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800">
+                                Company Account
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">
+                                Industry Partner
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Employer Management</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">Manages listings, slots &amp; school MOAs</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Verification &amp; Documents:</strong> Uploads SEC/DTI registration and
+                                    Mayor's Permit; vetted by Dugtong Admin before posting.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Openings Management:</strong> Post, edit, close, and republish listings
+                                    with mandatory <strong>Scope of Tasks</strong>, slots, and schedule.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Partnership Requests:</strong> Accept or request official MOA partnerships
+                                    with PHINMA University of Iloilo.</span>
+                            </li>
+                            <li
+                                class="flex items-start gap-2 text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200">
+                                <span class="font-bold">!</span>
+                                <span><strong>School Adaptation:</strong> Confirms coordinator student placement
+                                    requests rather than processing unvetted student applications.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code class="font-mono text-slate-700">/company/*</code>
+                    </div>
+                </div>
+
+                <!-- Role 6: Dugtong Admin (Governance & Trust) -->
+                <div
+                    class="bg-white rounded-2xl border border-rose-200 p-6 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800">
+                                Dugtong Admin
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
+                                Platform Trust
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Trust &amp; Governance</h3>
+                        <p class="text-xs text-slate-500 mb-4 font-medium">Company vetting, escalations &amp; safety
+                            audit</p>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Document Verifications:</strong> Reviews uploaded company legal
+                                    credentials (SEC, Mayor's Permit) to protect interns.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Escalation Decisions:</strong> Arbitrates severe workplace misuse reports
+                                    escalated from the PHINMA UI coordinator.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-600 font-bold">&check;</span>
+                                <span><strong>Company Trust Audits:</strong> Flags companies "under review" or suspends
+                                    them if repeated violations occur.</span>
+                            </li>
+                            <li
+                                class="flex items-start gap-2 text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200">
+                                <span class="font-bold">!</span>
+                                <span><strong>School Adaptation:</strong> Focuses exclusively on employer credibility
+                                    &amp; safety escalations rather than multi-school onboarding.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                        Endpoint: <code class="font-mono text-slate-700">/admin/*</code>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Interactive Scripts -->
+    <script>
+        let currentZoom = 1.0;
+        const zoomText = document.getElementById('zoom-indicator');
+        const svgs = document.querySelectorAll('.canvas-container svg');
+
+        function zoomChange(delta) {
+            currentZoom = Math.min(Math.max(0.6, currentZoom + delta), 2.2);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1.0;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            zoomText.textContent = Math.round(currentZoom * 100) + '%';
+            svgs.forEach(svg => {
+                svg.style.transform = `scale(${currentZoom})`;
+            });
+        }
+
+        function downloadSvg(svgId, filename) {
+            const svg = document.getElementById(svgId);
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+                source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadPng(svgId, filename, scaleFactor = 2) {
+            const svg = document.getElementById(svgId);
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            const svgBlob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = function () {
+                const canvas = document.createElement("canvas");
+                const viewBox = svg.viewBox.baseVal;
+                const width = viewBox.width || svg.clientWidth || 1600;
+                const height = viewBox.height || svg.clientHeight || 1080;
+                canvas.width = width * scaleFactor;
+                canvas.height = height * scaleFactor;
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.scale(scaleFactor, scaleFactor);
+                ctx.drawImage(img, 0, 0);
+
+                const pngURL = canvas.toDataURL("image/png");
+                const a = document.createElement("a");
+                a.href = pngURL;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URLObj.revokeObjectURL(blobURL);
+            };
+            img.src = blobURL;
+        }
+
+        // Nav active tab highlight on scroll across all 3 sections
+        window.addEventListener('scroll', () => {
+            const p1 = document.getElementById('part1-section');
+            const p2 = document.getElementById('part2-section');
+            const p3 = document.getElementById('part3-section');
+            const tab1 = document.getElementById('tab-p1');
+            const tab2 = document.getElementById('tab-p2');
+            const tab3 = document.getElementById('tab-p3');
+            const inactiveClass = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 transition';
+            const activeClass = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-blue-700 bg-white shadow-xs transition';
+
+            const scrollPos = window.scrollY + 180;
+            if (p3 && scrollPos >= p3.offsetTop) {
+                tab1.className = inactiveClass;
+                tab2.className = inactiveClass;
+                tab3.className = activeClass;
+            } else if (p2 && scrollPos >= p2.offsetTop) {
+                tab1.className = inactiveClass;
+                tab2.className = activeClass;
+                tab3.className = inactiveClass;
+            } else {
+                tab1.className = activeClass;
+                tab2.className = inactiveClass;
+                tab3.className = inactiveClass;
+            }
+        });
+    </script>
+</body>
+
+</html>

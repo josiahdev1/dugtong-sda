@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dugtong OJT — PHINMA UI System Design & Architecture Visualization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #FFFFFF;
+      --color-surface: #F5F7FA;
+      --color-text: #0F172A;
+      --color-muted: #596579;
+      --color-border: rgba(15,23,42,.12);
+      --color-primary: #2563EB;
+      --color-primary-hover: #1D4ED8;
+      --color-teal-bg: #DDF4F4;
+      --color-teal-text: #086A6A;
+      --color-success-bg: #D9F5EA;
+      --color-success-text: #087A55;
+      --color-warning-bg: #FEF3D7;
+      --color-warning-text: #8F5A06;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0B1220;
+      color: var(--color-text);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .toolbar {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111A2E;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      padding: 14px 24px;
+      border-radius: 12px;
+      color: #F1F5F9;
+    }
+
+    .toolbar-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-champion {
+      background: #D9F5EA;
+      color: #087A55;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background-color: #2563EB;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #1D4ED8;
+    }
+
+    .btn-secondary {
+      background-color: #17233A;
+      color: #F1F5F9;
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background-color: #1E2D4A;
+    }
+
+    .canvas-container {
+      width: 100%;
+      max-width: 1400px;
+      background: #FFFFFF;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media print {
+      body {
+        background: #FFFFFF;
+        padding: 0;
+      }
+      .toolbar {
+        display: none;
+      }
+      .canvas-container {
+        box-shadow: none;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="toolbar-title">
+      <strong>Dugtong OJT — PHINMA UI System Architecture & Workflow Blueprint</strong>
+      <span class="badge-champion">HACKATHON CHAMPION ARCHITECTURE</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn-secondary" onclick="downloadSVG()">Download SVG</button>
+      <button class="btn-primary" onclick="downloadPNG()">Download High-Res PNG (2x)</button>
+    </div>
+  </div>
+
+  <div class="canvas-container">
+    <svg id="architecture-svg" viewBox="0 0 1400 1060" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Arrow Markers -->
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#2563EB" />
+        </marker>
+        <marker id="arrow-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#086A6A" />
+        </marker>
+        <marker id="arrow-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#475569" />
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#087A55" />
+        </marker>
+      </defs>
+
+      <!-- Main Background -->
+      <rect width="1400" height="1060" fill="#FFFFFF" />
+
+      <!-- TOP HEADER BANNER -->
+      <rect x="0" y="0" width="1400" height="88" fill="#0F172A" />
+      <text x="40" y="40" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="700" letter-spacing="-0.02em">
+        DUGTONG OJT — SYSTEM DESIGN &amp; ARCHITECTURE (PHINMA UI PILOT)
+      </text>
+      <text x="40" y="66" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">
+        Integrated OJT Management SaaS + Verified Partner Marketplace  |  Stack: Next.js 15 App Router • React 19 • Tailwind v4 &amp; shadcn/ui • Hosted Supabase • Vercel
+      </text>
+      <rect x="1140" y="26" width="220" height="36" rx="18" fill="#17233A" stroke="#2563EB" stroke-width="1.5" />
+      <text x="1250" y="49" text-anchor="middle" fill="#A5C7FF" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600">
+        1M-USER READY • RA 10173
+      </text>
+
+      <!-- ======================================================================= -->
+      <!-- TIER 1: ROLE-AWARE ACTORS & CANONICAL WORKFLOWS (TOP LAYER)             -->
+      <!-- ======================================================================= -->
+      <rect x="32" y="108" width="1336" height="210" rx="12" fill="#F5F7FA" stroke="#E2E8F0" stroke-width="1.5" />
+      <text x="52" y="134" fill="#0F172A" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="0.06em">
+        1. FOUR CANONICAL ROLES + PUBLIC MARKETPLACE DISCOVERY (ROLE-AWARE VIEWS)
+      </text>
+
+      <!-- Role Card 1: Public Visitor -->
+      <rect x="52" y="148" width="244" height="152" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <rect x="66" y="162" width="108" height="22" rx="11" fill="#E5EEFE" />
+      <text x="120" y="177" text-anchor="middle" fill="#1D4ED8" font-family="Inter, sans-serif" font-size="11" font-weight="700">PUBLIC VISITOR</text>
+      <text x="66" y="204" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Open Marketplace</text>
+      <text x="66" y="225" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Browse verified OJT slots free</text>
+      <text x="66" y="244" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Filter course, hours &amp; location</text>
+      <text x="66" y="263" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Inspect mandatory Task Scope</text>
+      <text x="66" y="282" fill="#086A6A" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Zero Student PII Exposed</text>
+
+      <!-- Role Card 2: School Coordinator -->
+      <rect x="314" y="148" width="256" height="152" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" />
+      <rect x="328" y="162" width="176" height="22" rx="11" fill="#2563EB" />
+      <text x="416" y="177" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="11" font-weight="700">PHINMA UI COORDINATOR</text>
+      <text x="328" y="204" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">School Management (Core)</text>
+      <text x="328" y="225" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Upload CSV/Excel student roster</text>
+      <text x="328" y="244" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Request partnerships &amp; deploy</text>
+      <text x="328" y="263" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Approve student daily journals</text>
+      <text x="328" y="282" fill="#1D4ED8" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Generates Audit &amp; MOA Reports</text>
+
+      <!-- Role Card 3: Company Supervisor -->
+      <rect x="588" y="148" width="256" height="152" rx="10" fill="#FFFFFF" stroke="#086A6A" stroke-width="1.5" />
+      <rect x="602" y="162" width="150" height="22" rx="11" fill="#DDF4F4" />
+      <text x="677" y="177" text-anchor="middle" fill="#086A6A" font-family="Inter, sans-serif" font-size="11" font-weight="700">PARTNER SUPERVISOR</text>
+      <text x="602" y="204" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Host Company Workspace</text>
+      <text x="602" y="225" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Post OJT slots + Scope of Tasks</text>
+      <text x="602" y="244" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Accept/Decline school requests</text>
+      <text x="602" y="263" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Record intern attendance logs</text>
+      <text x="602" y="282" fill="#086A6A" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Submits Evaluations (No Journals)</text>
+
+      <!-- Role Card 4: PHINMA UI Student -->
+      <rect x="862" y="148" width="244" height="152" rx="10" fill="#FFFFFF" stroke="#087A55" stroke-width="1.5" />
+      <rect x="876" y="162" width="136" height="22" rx="11" fill="#D9F5EA" />
+      <text x="944" y="177" text-anchor="middle" fill="#087A55" font-family="Inter, sans-serif" font-size="11" font-weight="700">PHINMA UI STUDENT</text>
+      <text x="876" y="204" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Intern Protection Portal</text>
+      <text x="876" y="225" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Created via verified school CSV</text>
+      <text x="876" y="244" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Acknowledge Scope on 1st login</text>
+      <text x="876" y="263" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Submit daily journals &amp; tasks</text>
+      <text x="876" y="282" fill="#087A55" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Read-Only Attendance + Appeals</text>
+
+      <!-- Role Card 5: Dugtong Admin -->
+      <rect x="1124" y="148" width="224" height="152" rx="10" fill="#FFFFFF" stroke="#B31B1B" stroke-width="1.5" />
+      <rect x="1138" y="162" width="124" height="22" rx="11" fill="#FDE4E4" />
+      <text x="1200" y="177" text-anchor="middle" fill="#B31B1B" font-family="Inter, sans-serif" font-size="11" font-weight="700">DUGTONG ADMIN</text>
+      <text x="1138" y="204" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Trust &amp; Governance</text>
+      <text x="1138" y="225" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Verify school &amp; company docs</text>
+      <text x="1138" y="244" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Review escalated scope reports</text>
+      <text x="1138" y="263" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Oversee platform trust scores</text>
+      <text x="1138" y="282" fill="#B31B1B" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Enforces Safe Placements</text>
+
+      <!-- Connectors from Tier 1 to Tier 2 -->
+      <line x1="174" y1="300" x2="174" y2="352" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow-blue)" />
+      <line x1="442" y1="300" x2="442" y2="352" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow-blue)" />
+      <line x1="716" y1="300" x2="716" y2="352" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow-blue)" />
+      <line x1="984" y1="300" x2="984" y2="352" stroke="#086A6A" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrow-teal)" />
+      <line x1="1236" y1="300" x2="1236" y2="352" stroke="#086A6A" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrow-teal)" />
+
+      <!-- ======================================================================= -->
+      <!-- TIER 2: VERCEL EDGE + NEXT.JS 15 APP ROUTER ARCHITECTURE                -->
+      <!-- ======================================================================= -->
+      <rect x="32" y="356" width="1336" height="240" rx="12" fill="#EEF2F7" stroke="#2563EB" stroke-width="2" />
+      <text x="52" y="382" fill="#1D4ED8" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="0.06em">
+        2. VERCEL CLOUD &amp; NEXT.JS 15 APP ROUTER LAYER (CLEAN MVC + SERVICE-REPOSITORY SEPARATION)
+      </text>
+
+      <!-- Edge & UI Box -->
+      <rect x="52" y="398" width="410" height="178" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <text x="70" y="424" fill="#0F172A" font-family="Inter, sans-serif" font-size="15" font-weight="700">Presentation &amp; Edge Layer (src/app/ &amp; ui/)</text>
+      <text x="70" y="448" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Vercel Edge WAF &amp; IP Flood Protection (429 Rate Limit)</text>
+      <text x="70" y="469" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Cookie-Free ISR Edge Cache for Public Marketplace</text>
+      <text x="70" y="490" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Generic Props-Driven shadcn/ui (src/components/ui/)</text>
+      <text x="70" y="511" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Instant Button Lock (useActionState) on Click</text>
+      <rect x="70" y="528" width="374" height="32" rx="6" fill="#F5F7FA" />
+      <text x="84" y="549" fill="#0F172A" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="600">Owner: Neil Mar (Tokens, Responsive 375px-1440px)</text>
+
+      <!-- Arrow Box 1 -> Box 2 -->
+      <line x1="462" y1="487" x2="494" y2="487" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrow-blue)" />
+
+      <!-- Controller & Domain Service Box -->
+      <rect x="498" y="398" width="430" height="178" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" />
+      <text x="516" y="424" fill="#0F172A" font-family="Inter, sans-serif" font-size="15" font-weight="700">Server Actions &amp; Domain Services (src/lib/)</text>
+      <text x="516" y="448" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Trusted Auth Check: supabase.auth.getUser() + Server Role</text>
+      <text x="516" y="469" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Zod Schema &amp; Server CSV Roster Validation (Row-Level)</text>
+      <text x="516" y="490" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Rules: Sender != Receiver Accept | Scope Mandatory</text>
+      <text x="516" y="511" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Server-Side Student Account Creation &amp; Hour Calculation</text>
+      <rect x="516" y="528" width="394" height="32" rx="6" fill="#E5EEFE" />
+      <text x="530" y="549" fill="#1D4ED8" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="600">Owners: Josiah (Market/Eval) • Arwin (OJT) • Khent (Sec)</text>
+
+      <!-- Client Realtime Sync Box -->
+      <rect x="954" y="398" width="394" height="178" rx="10" fill="#FFFFFF" stroke="#086A6A" stroke-width="1.5" />
+      <text x="972" y="424" fill="#086A6A" font-family="Inter, sans-serif" font-size="15" font-weight="700">Direct Client Realtime Sync ('use client')</text>
+      <text x="972" y="448" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Uses Browser Client in src/lib/supabase/</text>
+      <text x="972" y="469" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Scoped WebSocket Channels (school_id / student_id)</text>
+      <text x="972" y="490" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Live Attendance, Slot, Partnership &amp; Journal Updates</text>
+      <text x="972" y="511" fill="#596579" font-family="Inter, sans-serif" font-size="12.5">• Clean Unmount: supabase.removeChannel(channel)</text>
+      <rect x="972" y="528" width="358" height="32" rx="6" fill="#DDF4F4" />
+      <text x="986" y="549" fill="#086A6A" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="600">Zero Manual Page Refresh • Debounced router.refresh()</text>
+
+      <!-- Connectors from Tier 2 to Tier 3 -->
+      <line x1="713" y1="576" x2="713" y2="632" stroke="#2563EB" stroke-width="3" marker-end="url(#arrow-blue)" />
+      <rect x="555" y="592" width="316" height="24" rx="12" fill="#2563EB" />
+      <text x="713" y="608" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
+        HTTPS PostgREST + Supavisor Pool (Port 6543)
+      </text>
+
+      <line x1="1151" y1="636" x2="1151" y2="578" stroke="#086A6A" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrow-teal)" />
+      <rect x="1015" y="592" width="272" height="24" rx="12" fill="#DDF4F4" stroke="#086A6A" stroke-width="1" />
+      <text x="1151" y="608" text-anchor="middle" fill="#086A6A" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
+        WebSocket WSS Push (CDC / Broadcast)
+      </text>
+
+      <!-- ======================================================================= -->
+      <!-- TIER 3: HOSTED SUPABASE BACKEND & 1M-USER POSTGRES ENGINE               -->
+      <!-- ======================================================================= -->
+      <rect x="32" y="636" width="1336" height="218" rx="12" fill="#F5F7FA" stroke="#087A55" stroke-width="2" />
+      <text x="52" y="662" fill="#087A55" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="0.06em">
+        3. HOSTED SUPABASE PLATFORM (POSTGRESQL ENGINE • MANDATORY RLS • ATOMIC TRANSACTIONS • PRIVATE STORAGE)
+      </text>
+
+      <!-- Supabase Box 1: Auth & RLS -->
+      <rect x="52" y="678" width="308" height="158" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <text x="68" y="704" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Supabase Auth &amp; High-Speed RLS</text>
+      <text x="68" y="726" fill="#596579" font-family="Inter, sans-serif" font-size="12">• RLS ON for 100% of tables (Non-negotiable)</text>
+      <text x="68" y="746" fill="#596579" font-family="Inter, sans-serif" font-size="12">• initPlan Caching: (SELECT auth.uid())</text>
+      <text x="68" y="766" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Strict School &amp; Company Tenant Isolation</text>
+      <text x="68" y="786" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Zero service_role key in client/repo</text>
+      <text x="68" y="816" fill="#087A55" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">DPA 2012 (RA 10173) Compliant</text>
+
+      <!-- Supabase Box 2: Core Multi-Tenant Schema & Indexes -->
+      <rect x="378" y="678" width="340" height="158" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <text x="394" y="704" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">PostgreSQL Schema &amp; 1M-User Indexes</text>
+      <text x="394" y="726" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Core: schools, companies, listings, partnerships</text>
+      <text x="394" y="746" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Tracking: students, deployments, journals</text>
+      <text x="394" y="766" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Records: time_entries, evaluations, reports</text>
+      <text x="394" y="786" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Indexes: FK B-Tree + GIN (Arrays) + BRIN (Dates)</text>
+      <text x="394" y="816" fill="#1D4ED8" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Numbered Migrations in supabase/sql/</text>
+
+      <!-- Supabase Box 3: Atomic RPC & Audit Trail -->
+      <rect x="736" y="678" width="308" height="158" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <text x="752" y="704" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Atomic Concurrency &amp; Audit Logs</text>
+      <text x="752" y="726" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Atomic RPCs for multi-table writes</text>
+      <text x="752" y="746" fill="#596579" font-family="Inter, sans-serif" font-size="12">• CHECK (slots &gt;= 0) &amp; UNIQUE constraints</text>
+      <text x="752" y="766" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Append-only audit triggers (who/what/when)</text>
+      <text x="752" y="786" fill="#596579" font-family="Inter, sans-serif" font-size="12">• No UPDATE/DELETE policy on audit logs</text>
+      <text x="752" y="816" fill="#8F5A06" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Tamper-Evident CHED Audit Trail</text>
+
+      <!-- Supabase Box 4: Private Storage & Realtime -->
+      <rect x="1062" y="678" width="286" height="158" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+      <text x="1078" y="704" fill="#0F172A" font-family="Inter, sans-serif" font-size="14" font-weight="700">Private Storage &amp; Realtime CDC</text>
+      <text x="1078" y="726" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Private Buckets: DTI/SEC, Permits, MOAs</text>
+      <text x="1078" y="746" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Short-Lived Server Signed URLs Only</text>
+      <text x="1078" y="766" fill="#596579" font-family="Inter, sans-serif" font-size="12">• Realtime WAL -> WebSocket Broadcast</text>
+      <text x="1078" y="786" fill="#596579" font-family="Inter, sans-serif" font-size="12">• RLS-Authorized Live Delta Events</text>
+      <text x="1078" y="816" fill="#086A6A" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Sub-50ms Live Dashboard Sync</text>
+
+      <!-- ======================================================================= -->
+      <!-- TIER 4: END-TO-END OJT LIFECYCLE & THOUSAND-CLICK PROTECTION PIPELINE   -->
+      <!-- ======================================================================= -->
+      <rect x="32" y="874" width="1336" height="156" rx="12" fill="#0F172A" />
+      <text x="52" y="902" fill="#A5C7FF" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="0.06em">
+        4. END-TO-END PHINMA UI OJT LIFECYCLE &amp; HIGH-CONCURRENCY SPIKE PIPELINE (ZERO RACE CONDITIONS)
+      </text>
+
+      <!-- Step 1 -->
+      <rect x="52" y="920" width="196" height="90" rx="8" fill="#17233A" stroke="#334155" stroke-width="1.5" />
+      <text x="66" y="942" fill="#3CCFCF" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 1 • VERIFY &amp; LIST</text>
+      <text x="66" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">Company Publishes Slot</text>
+      <text x="66" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">Admin verifies org; mandatory</text>
+      <text x="66" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">scope_of_tasks defined.</text>
+
+      <line x1="248" y1="965" x2="268" y2="965" stroke="#3CCFCF" stroke-width="2" marker-end="url(#arrow-teal)" />
+
+      <!-- Step 2 -->
+      <rect x="272" y="920" width="196" height="90" rx="8" fill="#17233A" stroke="#334155" stroke-width="1.5" />
+      <text x="286" y="942" fill="#3CCFCF" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 2 • PARTNERSHIP</text>
+      <text x="286" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">Request -&gt; Accepted</text>
+      <text x="286" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">School &amp; company match;</text>
+      <text x="286" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">receiver accepts partnership.</text>
+
+      <line x1="468" y1="965" x2="488" y2="965" stroke="#3CCFCF" stroke-width="2" marker-end="url(#arrow-teal)" />
+
+      <!-- Step 3 -->
+      <rect x="492" y="920" width="196" height="90" rx="8" fill="#17233A" stroke="#334155" stroke-width="1.5" />
+      <text x="506" y="942" fill="#3CCFCF" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 3 • ROSTER DEPLOY</text>
+      <text x="506" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">CSV Upload &amp; Assign</text>
+      <text x="506" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">Server validates CSV; deploys</text>
+      <text x="506" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">students to accepted partner.</text>
+
+      <line x1="688" y1="965" x2="708" y2="965" stroke="#3CCFCF" stroke-width="2" marker-end="url(#arrow-teal)" />
+
+      <!-- Step 4 -->
+      <rect x="712" y="920" width="196" height="90" rx="8" fill="#17233A" stroke="#334155" stroke-width="1.5" />
+      <text x="726" y="942" fill="#F5B74A" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 4 • SCOPE SHIELD</text>
+      <text x="726" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">Acknowledge &amp; Log</text>
+      <text x="726" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">Student confirms scope, submits</text>
+      <text x="726" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">journals, or flags misuse.</text>
+
+      <line x1="908" y1="965" x2="928" y2="965" stroke="#3CCFCF" stroke-width="2" marker-end="url(#arrow-teal)" />
+
+      <!-- Step 5 -->
+      <rect x="932" y="920" width="200" height="90" rx="8" fill="#17233A" stroke="#334155" stroke-width="1.5" />
+      <text x="946" y="942" fill="#34D399" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 5 • TRACK &amp; EVAL</text>
+      <text x="946" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">Attendance &amp; Grading</text>
+      <text x="946" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">Supervisor logs attendance &amp;</text>
+      <text x="946" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">evaluations; Coordinator approves.</text>
+
+      <line x1="1132" y1="965" x2="1152" y2="965" stroke="#3CCFCF" stroke-width="2" marker-end="url(#arrow-teal)" />
+
+      <!-- Step 6 -->
+      <rect x="1156" y="920" width="192" height="90" rx="8" fill="#17233A" stroke="#2563EB" stroke-width="1.5" />
+      <text x="1170" y="942" fill="#A5C7FF" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">STEP 6 • DATA MOAT</text>
+      <text x="1170" y="963" fill="#F1F5F9" font-family="Inter, sans-serif" font-size="13" font-weight="700">Reports &amp; Certificates</text>
+      <text x="1170" y="982" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">Audit-ready CHED exports,</text>
+      <text x="1170" y="998" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5">trust scores &amp; certificates.</text>
+    </svg>
+  </div>
+
+  <script>
+    function downloadSVG() {
+      const svgEl = document.getElementById('architecture-svg');
+      const serializer = new XMLSerializer();
+      let source = serializer.serializeToString(svgEl);
+      if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+        source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+      const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Dugtong-OJT-PHINMA-UI-Architecture.svg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadPNG() {
+      const svgEl = document.getElementById('architecture-svg');
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgEl);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = 2800; // 2x Retina Resolution (2800 x 2120)
+        canvas.height = 2120;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+
+        const pngUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = pngUrl;
+        a.download = 'Dugtong-OJT-PHINMA-UI-Architecture-2x.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      img.src = url;
+    }
+  </script>
+</body>
+</html>
